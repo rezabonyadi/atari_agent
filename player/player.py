@@ -1,0 +1,76 @@
+import numpy as np
+
+from player.player_components.memory import ReplayMemory
+from player.player_components.learner import QLearner
+
+UPDATE_FREQ = 4                  # Every four actions a gradient descend step is performed
+NETW_UPDATE_FREQ = 10000         # Number of chosen actions between updating the target network.
+                                 # According to Mnih et al. 2015 this is measured in the number of
+                                 # parameter updates (every four actions), however, in the
+                                 # DeepMind code, it is clearly measured in the number
+                                 # of actions the agent choses
+REPLAY_MEMORY_START_SIZE = 50000 # Number of completely random actions,
+                                 # before the agent starts learning
+
+
+class Player:
+    def __init__(self, game_env, agent_history_length=4, mem_size=1000000, batch_size=32,
+                 hidden=1024, learning_rate=0.00001, init_epsilon=1.0, minimum_observe_episode=200,
+                 update_target_frequency=10000, gamma=0.99):
+        self.n_actions = game_env.action_space_size
+        self.epsilon = init_epsilon
+        self.minimum_observe_episodes = minimum_observe_episode
+        self.update_target_frequency = update_target_frequency
+        self.gamma = gamma
+        self.game_env = game_env
+
+        self.memory = ReplayMemory(game_env.frame_height, game_env.frame_width,
+                                   agent_history_length, mem_size, batch_size, game_env.is_graphical)
+        self.learner = QLearner(self.n_actions, hidden, learning_rate,
+                               game_env.frame_height, game_env.frame_width, agent_history_length)
+        self.losses = []
+
+        # self.actuator = ???
+
+    def take_action(self, current_state, episode):
+        if np.random.rand() <= self.epsilon or episode < self.minimum_observe_episodes:
+            # take random action
+            return np.random.randint(0, self.n_actions)
+        else:
+            current_state = np.expand_dims(current_state, axis=0)
+            q_value = self.learner.predict(current_state)  # separate old model to predict
+
+            return np.argmax(q_value[0,:])
+        # current_state = np.expand_dims(current_state, axis=0)
+        # q_value = self.learner.predict(current_state)  # separate old model to predict
+        #
+        # return np.argmax(q_value[0, :])
+
+        # current_state = np.expand_dims(current_state, axis=0)
+        # q_value = self.learner.predict(current_state)[0]  # separate old model to predict
+        # v = q_value - q_value.min()
+        # v /= v.sum()
+        # v = np.cumsum(v)
+        #
+        # r = np.random.rand()
+        # indx = np.argwhere(v >= r)
+        # return indx[0][0]
+        #
+    def learn(self, no_passed_frames):
+        if no_passed_frames % UPDATE_FREQ == 0:
+            current_state_batch, actions, rewards, next_state_batch, terminal_flags = self.memory.get_minibatch()
+            loss = self.learner.train(current_state_batch, actions, rewards, next_state_batch, terminal_flags)
+            self.losses.append(loss)
+
+        if no_passed_frames % NETW_UPDATE_FREQ == 0:
+            self.learner.update_target_network()
+
+    def updates(self, no_passed_frames, episode):
+        if no_passed_frames > REPLAY_MEMORY_START_SIZE:
+            self.update_epsilon(episode)
+            self.learn(no_passed_frames)
+
+    def update_epsilon(self, episode):
+        self.epsilon -= 0.000001
+        self.epsilon = max(self.epsilon, 0.1)
+        # print('Epsilon: ', str(self.epsilon))
