@@ -1,5 +1,5 @@
 import tensorflow as tf
-from keras import layers
+from keras import layers, callbacks
 from keras.models import Model
 from keras.optimizers import RMSprop, Adam
 from keras import backend as K
@@ -12,6 +12,9 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.merge import Add
 from keras.initializers import VarianceScaling
+
+import tensorflow as tf
+from keras import backend as K
 
 
 class QLearner:
@@ -33,6 +36,31 @@ class QLearner:
                                   self.frame_height, self.frame_width, agent_history_length)
 
         self.targets = np.zeros((batch_size,))
+        self.set_computation_device()
+
+        self.tbCallBack = callbacks.TensorBoard(log_dir='./output/Tensorboards', histogram_freq=0, write_graph=True, write_images=True)
+
+    @staticmethod
+    def set_computation_device():
+        num_cores = 14
+        GPU = True
+
+        if GPU:
+            num_GPU = 1
+            num_CPU = 1
+        else:
+            num_CPU = 1
+            num_GPU = 0
+
+        config = tf.ConfigProto(intra_op_parallelism_threads=num_cores,
+                                inter_op_parallelism_threads=num_cores,
+                                allow_soft_placement=True,
+                                device_count={'CPU': num_CPU,
+                                              'GPU': num_GPU}
+                                )
+
+        session = tf.Session(config=config)
+        K.set_session(session)
 
     def predict(self, states):
         actions_mask = np.ones((states.shape[0], self.n_actions))
@@ -46,7 +74,7 @@ class QLearner:
         one_hot_targets = one_hot_actions * self.targets[:, None]
 
         history = self.main_learner.model.fit([current_state_batch, one_hot_actions], one_hot_targets,
-                                 epochs=1, batch_size=self.batch_size, verbose=0)
+                                 epochs=1, batch_size=self.batch_size, verbose=0, callbacks=[self.tbCallBack])
 
         return history.history['loss'][0]
 
@@ -243,28 +271,28 @@ class DQN:
         frames_input = Input(shape=input_shape)
         normalized = layers.Lambda(lambda x: x / 255.0, name='norm')(frames_input)
 
-        net = Conv2D(32, (8, 8), strides=(4, 4),
+        net = Conv2D(8, (8, 8), strides=(4, 4),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(normalized)
-        net = Conv2D(64, (4, 4), strides=(2, 2),
+        net = Conv2D(16, (4, 4), strides=(2, 2),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
-        net = Conv2D(64, (4, 4), strides=(1, 1),
+        net = Conv2D(16, (4, 4), strides=(1, 1),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
-        net = Conv2D(64, (4, 4), strides=(1, 1),
+        net = Conv2D(16, (4, 4), strides=(1, 1),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
-        net = Conv2D(128, (3, 3), strides=(1, 1),
+        net = Conv2D(32, (3, 3), strides=(1, 1),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
 
         net = Flatten()(net)
-        advt = Dense(64, kernel_initializer=initializer)(net)
+        advt = Dense(16, kernel_initializer=initializer)(net)
         # advt = Dense(50, kernel_initializer=initializer)(net)
 
         advt = Dense(num_actions)(advt)
-        value = Dense(64, kernel_initializer=initializer)(net)
+        value = Dense(16, kernel_initializer=initializer)(net)
         # value = Dense(50, kernel_initializer=initializer)(net)
 
         value = Dense(1)(value)
