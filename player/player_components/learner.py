@@ -98,8 +98,8 @@ class DQN:
         # model = self.nature_convnet(input_shape, self.n_actions)
         model.summary()
 
-        # optimizer = RMSprop(lr=0.00025, rho=0.95)
-        optimizer = Adam(lr=self.learning_rate)
+        optimizer = RMSprop(lr=0.00025, rho=0.95)
+        # optimizer = Adam(lr=self.learning_rate)
         model.compile(optimizer, loss=self.huber_loss)
 
         self.model = model

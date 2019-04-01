@@ -71,6 +71,6 @@ class Player:
             self.learn(no_passed_frames)
 
     def update_epsilon(self, episode):
-        self.epsilon -= 0.000001
+        self.epsilon -= 0.00001
         self.epsilon = max(self.epsilon, 0.1)
         # print('Epsilon: ', str(self.epsilon))
