@@ -11,12 +11,15 @@ NETW_UPDATE_FREQ = 10000         # Number of chosen actions between updating the
                                  # of actions the agent choses
 REPLAY_MEMORY_START_SIZE = 50000 # Number of completely random actions,
                                  # before the agent starts learning
+DISCOUNT_FACTOR = 0.99           # gamma in the Bellman equation
+MEMORY_SIZE = 1000000            # Number of transitions stored in the replay memory
+BS = 32                          # Batch size
 
 
 class Player:
-    def __init__(self, game_env, agent_history_length=4, mem_size=1000000, batch_size=32,
+    def __init__(self, game_env, agent_history_length=4, mem_size=MEMORY_SIZE, batch_size=BS,
                  hidden=1024, learning_rate=0.00001, init_epsilon=1.0, minimum_observe_episode=200,
-                 update_target_frequency=10000, gamma=0.99):
+                 update_target_frequency=10000, gamma=DISCOUNT_FACTOR):
         self.n_actions = game_env.action_space_size
         self.epsilon = init_epsilon
         self.minimum_observe_episodes = minimum_observe_episode
@@ -27,7 +30,7 @@ class Player:
         self.memory = ReplayMemory(game_env.frame_height, game_env.frame_width,
                                    agent_history_length, mem_size, batch_size, game_env.is_graphical)
         self.learner = QLearner(self.n_actions, hidden, learning_rate,
-                               game_env.frame_height, game_env.frame_width, agent_history_length)
+                               game_env.frame_height, game_env.frame_width, agent_history_length, gamma=self.gamma)
         self.losses = []
 
         # self.actuator = ???

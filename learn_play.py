@@ -6,22 +6,10 @@ import cv2
 
 # Control parameters
 MAX_EPISODE_LENGTH = 18000       # Equivalent of 5 minutes of gameplay at 60 frames per second
-EVAL_FREQUENCY = 200000          # Number of frames the agent sees between evaluations
-EVAL_STEPS = 10000               # Number of frames for one evaluation
-DISCOUNT_FACTOR = 0.99           # gamma in the Bellman equation
-MAX_FRAMES = 30000000            # Total number of frames the agent sees
-MEMORY_SIZE = 1000000            # Number of transitions stored in the replay memory
 NO_OP_STEPS = 10                 # Number of 'NOOP' or 'FIRE' actions at the beginning of an
                                  # evaluation episode
-HIDDEN = 1024                    # Number of filters in the final convolutional layer. The output
-                                 # has the shape (1,1,1024) which is split into two streams. Both
-                                 # the advantage stream and value stream have the shape
-                                 # (1,1,512). This is slightly different from the original
-                                 # implementation but tests I did with the environment Pong
-                                 # have shown that this way the score increases more quickly
 LEARNING_RATE = 0.00001          # Set to 0.00025 in Pong for quicker results.
                                  # Hessel et al. 2017 used 0.0000625
-BS = 32                          # Batch size
 
 MAX_EPISODES = 1000000
 AGENT_HISTORY_LENGTH = 4
@@ -36,10 +24,9 @@ def main_loop():
     frame_width = 84
 
     game_env = Atari(GAME_ENV, frame_height, frame_width, agent_history_length=AGENT_HISTORY_LENGTH,
-                     no_op_steps=10)
+                     no_op_steps=NO_OP_STEPS)
 
-    player = Player(game_env, AGENT_HISTORY_LENGTH, batch_size=BS,
-                    mem_size=MEMORY_SIZE, hidden=1024, learning_rate=0.00001, minimum_observe_episode=20)
+    player = Player(game_env, AGENT_HISTORY_LENGTH, learning_rate=0.00001, minimum_observe_episode=20)
 
     highest_reward = 0
     total_frames = 0
