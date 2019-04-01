@@ -8,14 +8,12 @@ import cv2
 MAX_EPISODE_LENGTH = 18000       # Equivalent of 5 minutes of gameplay at 60 frames per second
 NO_OP_STEPS = 10                 # Number of 'NOOP' or 'FIRE' actions at the beginning of an
                                  # evaluation episode
-LEARNING_RATE = 0.00001          # Set to 0.00025 in Pong for quicker results.
-                                 # Hessel et al. 2017 used 0.0000625
 
 MAX_EPISODES = 1000000
 AGENT_HISTORY_LENGTH = 4
 
 GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v0'
+GAME_ENV = 'SpaceInvaders-v0'
 # GAME_ENV = 'PongDeterministic-v4'
 
 

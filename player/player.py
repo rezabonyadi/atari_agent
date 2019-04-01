@@ -14,11 +14,13 @@ REPLAY_MEMORY_START_SIZE = 50000 # Number of completely random actions,
 DISCOUNT_FACTOR = 0.99           # gamma in the Bellman equation
 MEMORY_SIZE = 1000000            # Number of transitions stored in the replay memory
 BS = 32                          # Batch size
+LEARNING_RATE = 0.00001          # Set to 0.00025 in Pong for quicker results.
+                                 # Hessel et al. 2017 used 0.0000625
 
 
 class Player:
     def __init__(self, game_env, agent_history_length=4, mem_size=MEMORY_SIZE, batch_size=BS,
-                 hidden=1024, learning_rate=0.00001, init_epsilon=1.0, minimum_observe_episode=200,
+                 learning_rate=LEARNING_RATE, init_epsilon=1.0, minimum_observe_episode=200,
                  update_target_frequency=10000, gamma=DISCOUNT_FACTOR):
         self.n_actions = game_env.action_space_size
         self.epsilon = init_epsilon
@@ -29,7 +31,7 @@ class Player:
 
         self.memory = ReplayMemory(game_env.frame_height, game_env.frame_width,
                                    agent_history_length, mem_size, batch_size, game_env.is_graphical)
-        self.learner = QLearner(self.n_actions, hidden, learning_rate,
+        self.learner = QLearner(self.n_actions, learning_rate,
                                game_env.frame_height, game_env.frame_width, agent_history_length, gamma=self.gamma)
         self.losses = []
 

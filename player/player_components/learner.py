@@ -18,21 +18,20 @@ from keras import backend as K
 
 
 class QLearner:
-    def __init__(self, n_actions, hidden=1024, learning_rate=0.00001,
+    def __init__(self, n_actions, learning_rate=0.00001,
                  frame_height=84, frame_width=84, agent_history_length=4,
                  batch_size=32, gamma=0.99):
         self.n_actions = n_actions
-        self.hidden = hidden
         self.learning_rate = learning_rate
         self.frame_height = frame_height
         self.frame_width = frame_width
         self.agent_history_length = agent_history_length
         self.batch_size = batch_size
         self.gamma = gamma
-        self.main_learner = DQN(self.n_actions, hidden, learning_rate,
+        self.main_learner = DQN(self.n_actions, learning_rate,
                                 self.frame_height, self.frame_width, agent_history_length)
 
-        self.target_learner = DQN(self.n_actions, hidden, learning_rate,
+        self.target_learner = DQN(self.n_actions, learning_rate,
                                   self.frame_height, self.frame_width, agent_history_length)
 
         self.targets = np.zeros((batch_size,))
@@ -100,20 +99,17 @@ class DQN:
 
     # pylint: disable=too-many-instance-attributes
 
-    def __init__(self, n_actions, hidden=1024, learning_rate=0.00001,
+    def __init__(self, n_actions, learning_rate=0.00001,
                  frame_height=84, frame_width=84, agent_history_length=4):
         """
         Args:
             n_actions: Integer, number of possible actions
-            hidden: Integer, Number of filters in the final convolutional layer.
-                    This is different from the DeepMind implementation
             learning_rate: Float, Learning rate for the Adam optimizer
             frame_height: Integer, Height of a frame of an Atari game
             frame_width: Integer, Width of a frame of an Atari game
             agent_history_length: Integer, Number of frames stacked together to create a state
         """
         self.n_actions = n_actions
-        self.hidden = hidden
         self.learning_rate = learning_rate
         self.frame_height = frame_height
         self.frame_width = frame_width
@@ -126,7 +122,7 @@ class DQN:
         # model = self.nature_convnet(input_shape, self.n_actions)
         model.summary()
 
-        optimizer = RMSprop(lr=0.00025, rho=0.95)
+        optimizer = RMSprop(lr=self.learning_rate, rho=0.95)
         # optimizer = Adam(lr=self.learning_rate)
         model.compile(optimizer, loss=self.huber_loss)
 
