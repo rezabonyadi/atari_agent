@@ -37,7 +37,8 @@ class QLearner:
         self.targets = np.zeros((batch_size,))
         self.set_computation_device()
 
-        self.tbCallBack = callbacks.TensorBoard(log_dir='./output/Tensorboards', histogram_freq=0, write_graph=True, write_images=True)
+        # self.tbCallBack = [callbacks.TensorBoard(log_dir='./output/Tensorboards', histogram_freq=0, write_graph=True, write_images=True)]
+        self.tbCallBack = None
 
     @staticmethod
     def set_computation_device():
@@ -73,7 +74,7 @@ class QLearner:
         one_hot_targets = one_hot_actions * self.targets[:, None]
 
         history = self.main_learner.model.fit([current_state_batch, one_hot_actions], one_hot_targets,
-                                 epochs=1, batch_size=self.batch_size, verbose=0, callbacks=[self.tbCallBack])
+                                 epochs=1, batch_size=self.batch_size, verbose=0, callbacks=self.tbCallBack)
 
         return history.history['loss'][0]
 
