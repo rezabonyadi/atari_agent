@@ -24,7 +24,7 @@ def main_loop():
     game_env = Atari(GAME_ENV, frame_height, frame_width, agent_history_length=AGENT_HISTORY_LENGTH,
                      no_op_steps=NO_OP_STEPS)
 
-    player = Player(game_env, AGENT_HISTORY_LENGTH, learning_rate=0.00001, minimum_observe_episode=20)
+    player = Player(game_env, AGENT_HISTORY_LENGTH)
 
     highest_reward = 0
     total_frames = 0.0

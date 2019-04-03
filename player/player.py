@@ -19,18 +19,21 @@ LEARNING_RATE = 0.0001          # Set to 0.00025 in Pong for quicker results.
 
 
 class Player:
-    def __init__(self, game_env, agent_history_length=4, mem_size=MEMORY_SIZE, batch_size=BS,
+    def __init__(self, game_env, agent_history_length=4, max_mem_size=MEMORY_SIZE, batch_size=BS,
                  learning_rate=LEARNING_RATE, init_epsilon=1.0, minimum_observe_episode=200,
-                 update_target_frequency=10000, gamma=DISCOUNT_FACTOR):
+                 update_target_frequency=NETW_UPDATE_FREQ, train_frequency=UPDATE_FREQ,
+                 gamma=DISCOUNT_FACTOR, exploratory_memory_size=REPLAY_MEMORY_START_SIZE):
         self.n_actions = game_env.action_space_size
         self.epsilon = init_epsilon
         self.minimum_observe_episodes = minimum_observe_episode
         self.update_target_frequency = update_target_frequency
         self.gamma = gamma
         self.game_env = game_env
+        self.train_frequency = train_frequency
+        self.exploratory_memory_size = exploratory_memory_size
 
         self.memory = ReplayMemory(game_env.frame_height, game_env.frame_width,
-                                   agent_history_length, mem_size, batch_size, game_env.is_graphical)
+                                   agent_history_length, max_mem_size, batch_size, game_env.is_graphical)
         self.learner = QLearner(self.n_actions, learning_rate,
                                game_env.frame_height, game_env.frame_width, agent_history_length, gamma=self.gamma)
         self.losses = []
@@ -62,16 +65,16 @@ class Player:
         # return indx[0][0]
         #
     def learn(self, no_passed_frames):
-        if no_passed_frames % UPDATE_FREQ == 0:
+        if no_passed_frames % self.train_frequency == 0:
             current_state_batch, actions, rewards, next_state_batch, terminal_flags = self.memory.get_minibatch()
             loss = self.learner.train(current_state_batch, actions, rewards, next_state_batch, terminal_flags)
             self.losses.append(loss)
 
-        if no_passed_frames % NETW_UPDATE_FREQ == 0:
+        if no_passed_frames % self.update_target_frequency == 0:
             self.learner.update_target_network()
 
     def updates(self, no_passed_frames, episode):
-        if no_passed_frames > REPLAY_MEMORY_START_SIZE:
+        if no_passed_frames > self.exploratory_memory_size:
             self.update_epsilon(episode)
             self.learn(no_passed_frames)
 
