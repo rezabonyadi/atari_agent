@@ -42,11 +42,10 @@ class Player:
 
     def take_action(self, current_state, episode):
         if np.random.rand() <= self.epsilon or episode < self.minimum_observe_episodes:
-            # take random action
             return np.random.randint(0, self.n_actions)
         else:
             current_state = np.expand_dims(current_state, axis=0)
-            q_value = self.learner.predict(current_state)  # separate old model to predict
+            q_value = self.learner.predict(current_state)
 
             return np.argmax(q_value[0,:])
         # current_state = np.expand_dims(current_state, axis=0)
@@ -64,6 +63,7 @@ class Player:
         # indx = np.argwhere(v >= r)
         # return indx[0][0]
         #
+
     def learn(self, no_passed_frames):
         if no_passed_frames % self.train_frequency == 0:
             current_state_batch, actions, rewards, next_state_batch, terminal_flags = self.memory.get_minibatch()
@@ -82,3 +82,9 @@ class Player:
         self.epsilon -= 0.00001
         self.epsilon = max(self.epsilon, 0.1)
         # print('Epsilon: ', str(self.epsilon))
+
+    def save_player(self):
+        pass
+
+    def load_player(self):
+        pass

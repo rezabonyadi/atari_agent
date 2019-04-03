@@ -93,20 +93,9 @@ class QLearner:
 
 
 class DQN:
-    """Implements a Deep Q Network"""
-
-    # pylint: disable=too-many-instance-attributes
 
     def __init__(self, n_actions, learning_rate=0.00001,
                  frame_height=84, frame_width=84, agent_history_length=4):
-        """
-        Args:
-            n_actions: Integer, number of possible actions
-            learning_rate: Float, Learning rate for the Adam optimizer
-            frame_height: Integer, Height of a frame of an Atari game
-            frame_width: Integer, Width of a frame of an Atari game
-            agent_history_length: Integer, Number of frames stacked together to create a state
-        """
         self.n_actions = n_actions
         self.learning_rate = learning_rate
         self.frame_height = frame_height
@@ -116,8 +105,10 @@ class DQN:
         input_shape = (frame_height, frame_width, agent_history_length)
         # model = self.legacy_model(input_shape, self.n_actions)
         # model = self.dueling_convnet(input_shape, self.n_actions)
-        model = self.my_convnet(input_shape, self.n_actions)
+        # model = self.my_convnet(input_shape, self.n_actions)
         # model = self.nature_convnet(input_shape, self.n_actions)
+        model = self.modular_convnet(input_shape, self.n_actions)
+
         model.summary()
 
         optimizer = RMSprop(lr=self.learning_rate, rho=0.95)
@@ -294,6 +285,28 @@ class DQN:
         model = DQN.add_action_mask_layer(final, frames_input, num_actions)
 
         # model = Model(inputs=inputs, outputs=final)
+        return model
+
+    @staticmethod
+    def modular_convnet(input_shape, num_actions):
+        frames_input = Input(shape=input_shape)
+        normalized = layers.Lambda(lambda x: x / 255.0, name='norm')(frames_input)
+        # Vision
+        net = Conv2D(32, 8, strides=(4, 4), activation='relu')(normalized)
+        net = Conv2D(64, 4, strides=(2, 2), activation='relu')(net)
+        net = Conv2D(64, 3, strides=(1, 1), activation='relu')(net)
+        net = Flatten()(net)
+
+        # Reasoning
+        net = Dense(256, activation='relu')(net)
+        net = Dense(32, activation='relu')(net)
+
+        # Action decision maker
+        net = Dense(16, activation='relu')(net)
+        net = Dense(num_actions, activation=None)(net)
+
+        model = DQN.add_action_mask_layer(net, frames_input, num_actions)
+
         return model
 
     @staticmethod
