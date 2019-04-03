@@ -14,7 +14,7 @@ REPLAY_MEMORY_START_SIZE = 50000 # Number of completely random actions,
 DISCOUNT_FACTOR = 0.99           # gamma in the Bellman equation
 MEMORY_SIZE = 1000000            # Number of transitions stored in the replay memory
 BS = 32                          # Batch size
-LEARNING_RATE = 0.00001          # Set to 0.00025 in Pong for quicker results.
+LEARNING_RATE = 0.0001          # Set to 0.00025 in Pong for quicker results.
                                  # Hessel et al. 2017 used 0.0000625
 
 

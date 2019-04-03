@@ -13,9 +13,6 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.merge import Add
 from keras.initializers import VarianceScaling
 
-import tensorflow as tf
-from keras import backend as K
-
 
 class QLearner:
     def __init__(self, n_actions, learning_rate=0.00001,
@@ -230,18 +227,14 @@ class DQN:
         frames_input = Input(shape=input_shape)
         normalized = layers.Lambda(lambda x: x / 255.0, name='norm')(frames_input)
 
-        net = Conv2D(32, (8, 8), strides=(4, 4),
-                     activation='relu', kernel_initializer=initializer,
-                     padding='valid', use_bias=False)(normalized)
-        net = Conv2D(64, (4, 4), strides=(2, 2),
-                     activation='relu', kernel_initializer=initializer,
-                     padding='valid', use_bias=False)(net)
-        net = Conv2D(64, (3, 3), strides=(1, 1),
-                     activation='relu', kernel_initializer=initializer,
-                     padding='valid', use_bias=False)(net)
-        net = Conv2D(1024, (7, 7), strides=(1, 1),
-                     activation='relu', kernel_initializer=initializer,
-                     padding='valid', use_bias=False)(net)
+        net = Conv2D(32, (8, 8), strides=(4, 4), activation='relu', kernel_initializer=initializer, padding='valid',
+                     use_bias=False)(normalized)
+        net = Conv2D(64, (4, 4), strides=(2, 2), activation='relu', kernel_initializer=initializer, padding='valid',
+                     use_bias=False)(net)
+        net = Conv2D(64, (3, 3), strides=(1, 1), activation='relu', kernel_initializer=initializer, padding='valid',
+                     use_bias=False)(net)
+        net = Conv2D(1024, (7, 7), strides=(1, 1), activation='relu', kernel_initializer=initializer, padding='valid',
+                     use_bias=False)(net)
 
         net = Flatten()(net)
         advt = Dense(256, kernel_initializer=initializer)(net)
@@ -268,28 +261,28 @@ class DQN:
         frames_input = Input(shape=input_shape)
         normalized = layers.Lambda(lambda x: x / 255.0, name='norm')(frames_input)
 
-        net = Conv2D(8, (8, 8), strides=(4, 4),
+        net = Conv2D(32, (8, 8), strides=(4, 4),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(normalized)
-        net = Conv2D(16, (4, 4), strides=(2, 2),
+        net = Conv2D(64, (4, 4), strides=(2, 2),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
-        net = Conv2D(16, (4, 4), strides=(1, 1),
+        net = Conv2D(64, (4, 4), strides=(1, 1),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
-        net = Conv2D(16, (4, 4), strides=(1, 1),
+        net = Conv2D(64, (4, 4), strides=(1, 1),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
-        net = Conv2D(32, (3, 3), strides=(1, 1),
+        net = Conv2D(128, (3, 3), strides=(1, 1),
                      activation='relu', kernel_initializer=initializer,
                      padding='valid', use_bias=False)(net)
 
         net = Flatten()(net)
-        advt = Dense(16, kernel_initializer=initializer)(net)
+        advt = Dense(32, kernel_initializer=initializer)(net)
         # advt = Dense(50, kernel_initializer=initializer)(net)
 
         advt = Dense(num_actions)(advt)
-        value = Dense(16, kernel_initializer=initializer)(net)
+        value = Dense(32, kernel_initializer=initializer)(net)
         # value = Dense(50, kernel_initializer=initializer)(net)
 
         value = Dense(1)(value)

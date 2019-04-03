@@ -13,7 +13,7 @@ MAX_EPISODES = 1000000
 AGENT_HISTORY_LENGTH = 4
 
 GAME_ENV = 'BreakoutDeterministic-v4'
-GAME_ENV = 'SpaceInvaders-v0'
+# GAME_ENV = 'SpaceInvaders-v0'
 # GAME_ENV = 'PongDeterministic-v4'
 
 
@@ -27,9 +27,10 @@ def main_loop():
     player = Player(game_env, AGENT_HISTORY_LENGTH, learning_rate=0.00001, minimum_observe_episode=20)
 
     highest_reward = 0
-    total_frames = 0
+    total_frames = 0.0
     all_rewards = []
     time = datetime.datetime.now()
+    prev_time = time
 
     for episode in range(MAX_EPISODES):
         terminal_life_lost = game_env.reset()
@@ -58,9 +59,15 @@ def main_loop():
             highest_reward = episode_reward
 
         if episode % 10==0:
-            print(datetime.datetime.now() - time, ': ',
-                str(episode), ', ', str(highest_reward), ', ', np.mean(all_rewards[-100:]), ', ', str(total_frames),
-                  ', ', str(player.epsilon), ', ', np.mean(player.losses[-100:]))
+            time_passed = (datetime.datetime.now() - time).total_seconds()
+            print(datetime.datetime.now() - time, ': episod is ', str(episode),
+                  ', highest reward is ', str(highest_reward),
+                  ', average reward is ', str(np.mean(all_rewards[-100:])),
+                  ', total frames is ', str(total_frames),
+                  ', epsilon is ', str(player.epsilon),
+                  ' , loss is ', str(np.mean(player.losses[-100:])),
+                  ' , fps is ', str(total_frames/time_passed))
+            prev_time = datetime.datetime.now()
 
 
 main_loop()
