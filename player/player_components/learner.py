@@ -106,14 +106,15 @@ class DQN:
         # model = self.legacy_model(input_shape, self.n_actions)
         # model = self.dueling_convnet(input_shape, self.n_actions)
         # model = self.my_convnet(input_shape, self.n_actions)
-        # model = self.nature_convnet(input_shape, self.n_actions)
-        model = self.modular_convnet(input_shape, self.n_actions)
+        model = self.nature_convnet(input_shape, self.n_actions)
+        # model = self.modular_convnet(input_shape, self.n_actions)
 
         model.summary()
 
         optimizer = RMSprop(lr=self.learning_rate, rho=0.95)
         # optimizer = Adam(lr=self.learning_rate)
-        model.compile(optimizer, loss=self.huber_loss)
+        # tf.losses.huber_loss
+        model.compile(optimizer, loss=tf.losses.huber_loss)
 
         self.model = model
 
@@ -298,11 +299,11 @@ class DQN:
         net = Flatten()(net)
 
         # Reasoning
-        net = Dense(256, activation='relu')(net)
-        net = Dense(32, activation='relu')(net)
+        net = Dense(256, activation='tanh')(net)
+        net = Dense(64, activation='tanh')(net)
 
         # Action decision maker
-        net = Dense(16, activation='relu')(net)
+        net = Dense(32, activation='relu')(net)
         net = Dense(num_actions, activation=None)(net)
 
         model = DQN.add_action_mask_layer(net, frames_input, num_actions)

@@ -1,5 +1,6 @@
 import numpy as np
-
+import os
+import datetime
 from player.player_components.memory import ReplayMemory
 from player.player_components.learner import QLearner
 
@@ -83,7 +84,11 @@ class Player:
         self.epsilon = max(self.epsilon, 0.1)
         # print('Epsilon: ', str(self.epsilon))
 
-    def save_player(self):
+    def save_player(self, info_to_save):
+        d = datetime.datetime.now().strftime("%y_%m_%d_%H_%M_%S")
+        address = ''.join(['./output/results_', d, '/'])
+        os.makedirs(address)
+
         pass
 
     def load_player(self):
