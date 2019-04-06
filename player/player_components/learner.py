@@ -17,7 +17,7 @@ from keras.initializers import VarianceScaling
 class QLearner:
     def __init__(self, n_actions, learning_rate=0.00001,
                  frame_height=84, frame_width=84, agent_history_length=4,
-                 batch_size=32, gamma=0.99):
+                 batch_size=32, gamma=0.99, punishment=0.0):
         self.n_actions = n_actions
         self.learning_rate = learning_rate
         self.frame_height = frame_height
@@ -25,7 +25,9 @@ class QLearner:
         self.agent_history_length = agent_history_length
         self.batch_size = batch_size
         self.gamma = gamma
-        self.main_learner = DQN(self.n_actions, learning_rate,
+        self.punishment = punishment
+
+        self.main_learner = DQN(self.n_actions, self.learning_rate,
                                 self.frame_height, self.frame_width, agent_history_length)
 
         self.target_learner = DQN(self.n_actions, learning_rate,
@@ -82,15 +84,30 @@ class QLearner:
     def calculate_target_q_values(self, next_state_batch, terminal_flags, rewards):
         actions_mask = np.ones((self.batch_size, self.n_actions))
         q_next_state = self.main_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
-        action = np.argmax(q_next_state, axis=1)
+        action = self.action_selection_policy(q_next_state)
+
         q_target = self.target_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
 
         for i in range(self.batch_size):
             if terminal_flags[i]:
-                self.targets[i] = rewards[i] - 1.0
+                self.targets[i] = rewards[i] - self.punishment
             else:
                 self.targets[i] = rewards[i] + self.gamma * q_target[i, action[i]]
 
+    def action_selection_policy(self, q_values):
+        # v = q_values - q_values.min(axis=1).reshape((-1, 1))
+        # v += 1.0
+        # sums = v.sum(axis=1).reshape((-1, 1))
+        # v = v / sums
+        # v = np.cumsum(v, axis=1)
+        #
+        # res = np.empty(q_values.shape[0], dtype=np.int32)
+        # r = np.random.rand(q_values.shape[0])
+        # for i in range(q_values.shape[0]):
+        #     res[i] = np.argwhere(v[i,:] >= r[i])[0,0]
+
+        res = np.argmax(q_values, axis=1)
+        return res
 
 class DQN:
 
@@ -106,17 +123,18 @@ class DQN:
         # model = self.legacy_model(input_shape, self.n_actions)
         # model = self.dueling_convnet(input_shape, self.n_actions)
         # model = self.my_convnet(input_shape, self.n_actions)
-        model = self.nature_convnet(input_shape, self.n_actions)
+        # model = self.nature_convnet(input_shape, self.n_actions)
+        model = self.sim_nature_convnet(input_shape, self.n_actions)
         # model = self.modular_convnet(input_shape, self.n_actions)
 
         model.summary()
 
         optimizer = RMSprop(lr=self.learning_rate, rho=0.95)
         # optimizer = Adam(lr=self.learning_rate)
-        # tf.losses.huber_loss
         model.compile(optimizer, loss=tf.losses.huber_loss)
 
         self.model = model
+
 
     def huber_loss(self, y, q_value):
         error = K.abs(y - q_value)
@@ -309,6 +327,24 @@ class DQN:
         model = DQN.add_action_mask_layer(net, frames_input, num_actions)
 
         return model
+
+    @staticmethod
+    def sim_nature_convnet(input_shape, num_actions):
+        frames_input = Input(shape=input_shape)
+        normalized = layers.Lambda(lambda x: x / 255.0, name='norm')(frames_input)
+        # net = Conv2D(32, 8, strides=(4, 4), activation='relu')(normalized)
+        # net = Conv2D(64, 4, strides=(2, 2), activation='relu')(net)
+        # net = Conv2D(64, 3, strides=(1, 1), activation='relu')(net)
+
+        net = Conv2D(64, 16, strides=(10, 10), activation='relu')(normalized)
+
+        net = Flatten()(net)
+        net = Dense(512, activation='relu')(net)
+        net = Dense(num_actions, activation=None)(net)
+        model = DQN.add_action_mask_layer(net, frames_input, num_actions)
+
+        return model
+
 
     @staticmethod
     def add_action_mask_layer(final, frames_input, num_actions):

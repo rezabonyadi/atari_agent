@@ -9,6 +9,7 @@ class Atari:
     """Wrapper for the environment provided by gym"""
 
     def __init__(self, env_name, frame_height, frame_width, agent_history_length=4, no_op_steps=10):
+        self.env_name = env_name
         self.env = gym.make(env_name)
         print("The environment has the following {} actions: {}".format(self.env.action_space.n,
                                                                         self.env.unwrapped.get_action_meanings()))
