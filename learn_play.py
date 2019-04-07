@@ -2,22 +2,23 @@ from player.player import Player
 from environments.simulator import Atari
 import numpy as np
 import datetime
-import utils
+from utils import HandleResults
 
 GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v0'
 # GAME_ENV = 'PongDeterministic-v4'
 # GAME_ENV = 'Alien-v4'
+results_handler = HandleResults(GAME_ENV)
 
-
-def main_loop(load_folder=''):
+def main_loop(load_folder='', load_model=False):
 
     if load_folder is not '':
-        player, game_env, MAX_EPISODE_LENGTH, MAX_EPISODES, all_settings = utils.load_settings(load_folder)
+        player, game_env, MAX_EPISODE_LENGTH, MAX_EPISODES, all_settings = results_handler.load_settings(load_folder, load_model)
     else:
-        player, game_env, MAX_EPISODE_LENGTH, MAX_EPISODES, all_settings = utils.load_default(GAME_ENV)
+        player, game_env, MAX_EPISODE_LENGTH, MAX_EPISODES, all_settings = results_handler.load_default_settings(GAME_ENV)
 
-    utils.save_settings(all_settings, player)
+    results_handler.save_settings(all_settings, player)
+    res_dict = {}
 
     highest_reward = 0
     total_frames = 0.0
@@ -53,12 +54,18 @@ def main_loop(load_folder=''):
 
         if episode % 10==0:
             time_passed = (datetime.datetime.now() - time).total_seconds()
-            print(datetime.datetime.now() - time, ': episod is ', str(episode),
-                  ', highest reward is ', str(highest_reward),
-                  ', average reward is ', str(np.mean(all_rewards[-100:])),
-                  ', total frames is ', str(total_frames),
-                  ', epsilon is ', str(player.epsilon),
-                  ' , loss is ', str(np.mean(player.losses[-100:])),
-                  ' , fps is ', str(total_frames/time_passed))
+
+            res_dict['time'] = str(datetime.datetime.now() - time)
+            res_dict['highest_reward'] = highest_reward
+            res_dict['episode'] = episode
+            res_dict['mean_rewards'] = np.mean(all_rewards[-100:])
+            res_dict['total_frames'] = total_frames
+            res_dict['epsilon'] = player.epsilon
+            res_dict['mean_loss'] = np.mean(player.losses[-100:])
+            res_dict['fps'] = total_frames / time_passed
+
+            results_handler.save_res(res_dict)
+
+
 
 main_loop()

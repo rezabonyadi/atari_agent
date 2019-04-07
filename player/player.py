@@ -3,6 +3,7 @@ import os
 import datetime
 from player.player_components.memory import ReplayMemory
 from player.player_components.learner import QLearner
+from keras.models import model_from_json
 
 
 class Player:
@@ -64,8 +65,18 @@ class Player:
         self.epsilon = max(self.epsilon, self.end_epsilon)
         # print('Epsilon: ', str(self.epsilon))
 
-    def save_player_learner(self, file):
-        self.learner.main_learner.model.save(file)
+    def save_player_learner(self, folder):
+        model_json = self.learner.main_learner.model.to_json(indent=4)
+        with open(''.join([folder, 'model_structure.jsn']), "w") as json_file:
+            json_file.write(model_json)
+
+        self.learner.main_learner.model.save_weights(''.join([folder, 'model_weights.wts']))
 
     def load_player_learner(self, folder):
-        self.learner.main_learner.model.load_weights(''.join([folder,'main_learner.mdl']))
+        json_file = open(''.join([folder, 'model_structure.jsn']), 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
+        loaded_model = model_from_json(loaded_model_json)
+        loaded_model.load_weights(''.join([folder,'model_weights.wts']))
+
+        self.learner.main_learner.model = loaded_model
