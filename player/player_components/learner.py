@@ -124,6 +124,7 @@ class DQN:
         # model = self.dueling_convnet(input_shape, self.n_actions)
         # model = self.my_convnet(input_shape, self.n_actions)
         model = self.nature_convnet(input_shape, self.n_actions)
+        # model = self.small_nature_convnet(input_shape, self.n_actions)
         # model = self.sim_nature_convnet(input_shape, self.n_actions)
         # model = self.modular_convnet(input_shape, self.n_actions)
 
@@ -230,6 +231,21 @@ class DQN:
         model = DQN.add_action_mask_layer(net, frames_input, num_actions)
 
         return model
+
+    @staticmethod
+    def small_nature_convnet(input_shape, num_actions):
+        frames_input = Input(shape=input_shape)
+        normalized = layers.Lambda(lambda x: x / 255.0, name='norm')(frames_input)
+        net = Conv2D(8, 8, strides=(4, 4), activation='relu')(normalized)
+        net = Conv2D(16, 4, strides=(2, 2), activation='relu')(net)
+        net = Conv2D(16, 3, strides=(1, 1), activation='relu')(net)
+        net = Flatten()(net)
+        net = Dense(512, activation='relu')(net)
+        net = Dense(num_actions, activation=None)(net)
+        model = DQN.add_action_mask_layer(net, frames_input, num_actions)
+
+        return model
+
 
     @staticmethod
     def dueling_convnet(input_shape, num_actions):

@@ -39,12 +39,13 @@ class Player:
 
     def take_action(self, current_state, episode):
         if np.random.rand() <= self.epsilon or episode < self.minimum_observe_episodes:
-            return np.random.randint(0, self.n_actions)
+            action = np.random.randint(0, self.n_actions)
         else:
             current_state = np.expand_dims(current_state, axis=0)
             q_value = self.learner.predict(current_state)
 
-            return self.learner.action_selection_policy(q_value)
+            action = self.learner.action_selection_policy(q_value)
+        return action
 
     def learn(self, no_passed_frames):
         if no_passed_frames % self.train_frequency == 0:

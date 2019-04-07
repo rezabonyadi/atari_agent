@@ -22,7 +22,7 @@ def main_loop(load_folder='', load_model=False):
 
     highest_reward = 0
     total_frames = 0.0
-    all_rewards = []
+    all_rewards = np.zeros(MAX_EPISODES)
     time = datetime.datetime.now()
     prev_time = time
 
@@ -46,8 +46,8 @@ def main_loop(load_folder='', load_model=False):
                 break
 
             total_frames += 1
-
-        all_rewards.append(episode_reward)
+        all_rewards[episode] = episode_reward
+        # all_rewards.append(episode_reward)
 
         if episode_reward>highest_reward:
             highest_reward = episode_reward
@@ -58,7 +58,7 @@ def main_loop(load_folder='', load_model=False):
             res_dict['time'] = str(datetime.datetime.now() - time)
             res_dict['highest_reward'] = highest_reward
             res_dict['episode'] = episode
-            res_dict['mean_rewards'] = np.mean(all_rewards[-100:])
+            res_dict['mean_rewards'] = np.mean(all_rewards[episode-100:episode])
             res_dict['total_frames'] = total_frames
             res_dict['epsilon'] = player.epsilon
             res_dict['mean_loss'] = np.mean(player.losses[-100:])
