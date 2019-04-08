@@ -34,6 +34,7 @@ class Player:
                                self.game_env.frame_height, self.game_env.frame_width, self.agent_history_length,
                                 gamma=self.gamma, punishment=self.punishment)
         self.losses = []
+        self.q_values = []
 
         # self.actuator = ???
 
@@ -42,9 +43,10 @@ class Player:
             action = np.random.randint(0, self.n_actions)
         else:
             current_state = np.expand_dims(current_state, axis=0)
-            q_value = self.learner.predict(current_state)
+            q_values = self.learner.predict(current_state)
 
-            action = self.learner.action_selection_policy(q_value)
+            action, q_value = self.learner.action_selection_policy(q_values)
+            self.q_values.append(q_value)
         return action
 
     def learn(self, no_passed_frames):

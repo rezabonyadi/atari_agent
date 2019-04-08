@@ -84,7 +84,7 @@ class QLearner:
     def calculate_target_q_values(self, next_state_batch, terminal_flags, rewards):
         actions_mask = np.ones((self.batch_size, self.n_actions))
         q_next_state = self.main_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
-        action = self.action_selection_policy(q_next_state)
+        action, _ = self.action_selection_policy(q_next_state)
 
         q_target = self.target_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
 
@@ -107,7 +107,7 @@ class QLearner:
         #     res[i] = np.argwhere(v[i,:] >= r[i])[0,0]
 
         res = np.argmax(q_values, axis=1)
-        return res
+        return res, q_values[0,res][0]
 
 class DQN:
 
