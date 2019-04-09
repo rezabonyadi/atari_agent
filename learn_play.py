@@ -4,53 +4,67 @@ import numpy as np
 import datetime
 from utils import HandleResults
 
-GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v0'
+# GAME_ENV = 'BreakoutDeterministic-v4'
+GAME_ENV = 'SpaceInvaders-v4'
 # GAME_ENV = 'PongDeterministic-v4'
 # GAME_ENV = 'Alien-v4'
 results_handler = HandleResults(GAME_ENV)
 
+
+def run_episode(max_episode_length, episode, game_env, player, total_frames, evaluation=False):
+    terminal_life_lost = game_env.reset()
+    episode_reward = 0
+    episode_seq = 0
+    frame_number = 0
+    gif_frames = []
+    while True:
+        # Get state, make action, get next state (rewards, terminal, ...), record the experience, train if necessary
+        current_state = game_env.get_current_state()
+        action = player.take_action(current_state, episode, evaluation)
+        processed_new_frame, reward, terminal, terminal_life_lost, original_frame = game_env.step(action)
+
+        if evaluation:
+            gif_frames.append(original_frame)
+
+        if not evaluation:
+            player.updates(total_frames, episode, action, processed_new_frame, reward, terminal_life_lost, episode_seq)
+
+        episode_reward += reward
+        episode_seq += 1
+
+        if terminal_life_lost:
+            episode_seq = 0
+        # game_env.env.render()
+        total_frames += 1
+
+        if terminal or frame_number >= max_episode_length:
+            break
+
+        frame_number += 1
+
+    return episode_reward, total_frames
+
+
 def main_loop(load_folder='', load_model=False):
 
     if load_folder is not '':
-        player, game_env, MAX_EPISODE_LENGTH, MAX_EPISODES, all_settings = results_handler.load_settings(load_folder, load_model)
+        player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
+            results_handler.load_settings(load_folder, load_model)
     else:
-        player, game_env, MAX_EPISODE_LENGTH, MAX_EPISODES, all_settings = results_handler.load_default_settings(GAME_ENV)
+        player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
+            results_handler.load_default_settings(GAME_ENV)
 
     results_handler.save_settings(all_settings, player)
     res_dict = {}
 
     highest_reward = 0
     total_frames = 0.0
-    all_rewards = np.zeros(MAX_EPISODES)
+    all_rewards = np.zeros(max_number_of_episodes)
     time = datetime.datetime.now()
     prev_time = time
 
-    for episode in range(MAX_EPISODES):
-        terminal_life_lost = game_env.reset()
-        episode_reward = 0
-        episode_seq = 0
-        for frame_number in range(MAX_EPISODE_LENGTH):
-            # Get state, make action, get next state (rewards, terminal, ...), record the experience, train if necessary
-            current_state = game_env.get_current_state()
-            action = player.take_action(current_state, episode)
-            processed_new_frame, reward, terminal, terminal_life_lost, _ = game_env.step(action)
-
-            player.memory.add_experience(action, processed_new_frame, reward, terminal_life_lost, episode_seq)
-            episode_reward += reward
-            player.updates(total_frames, episode)
-            episode_seq += 1
-
-            if terminal_life_lost:
-                episode_seq = 0
-
-            # game_env.env.render()
-            total_frames += 1
-
-            if terminal:
-                terminal = False
-                break
-
+    for episode in range(max_number_of_episodes):
+        episode_reward, total_frames = run_episode(max_episode_length, episode, game_env, player, total_frames)
 
         all_rewards[episode] = episode_reward
         # all_rewards.append(episode_reward)
@@ -72,7 +86,5 @@ def main_loop(load_folder='', load_model=False):
             res_dict['fps'] = total_frames / time_passed
 
             results_handler.save_res(res_dict)
-
-
 
 main_loop()

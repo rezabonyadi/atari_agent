@@ -15,7 +15,7 @@
     "END_EPSILON": 0.1,
     "MIN_OBSERVE_EPISODE": 200,
     "GAME_ENV": "BreakoutDeterministic-v4",
-    "REWARD_EXTRAPOLATION_EXPONENT": 1.0,
+    "REWARD_EXTRAPOLATION_EXPONENT": 10.0,
     "frame_height": 84,
     "frame_width": 84
 }

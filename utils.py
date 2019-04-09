@@ -20,7 +20,6 @@ class HandleResults:
         os.makedirs(self.folder_to_use)
         self.results_file_name = ''.join([self.folder_to_use, 'results.csv'])
 
-
     def save_settings(self, settings, player):
         settings_dict = settings
 
