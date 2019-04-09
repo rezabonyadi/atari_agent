@@ -11,6 +11,7 @@ from keras.models import Model
 from keras.optimizers import RMSprop, Adam
 from keras import backend as K
 
+
 class ReplayMemory:
 
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
