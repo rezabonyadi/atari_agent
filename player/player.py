@@ -9,8 +9,8 @@ from keras.models import model_from_json
 class Player:
     def __init__(self, game_env, agent_history_length, max_mem_size, batch_size,
                  learning_rate, init_epsilon, end_epsilon, minimum_observe_episode,
-                 update_target_frequency, train_frequency,
-                 gamma, exploratory_memory_size, punishment):
+                 update_target_frequency, train_frequency, gamma, exploratory_memory_size,
+                 punishment, reward_extrapolation_exponent):
         self.n_actions = game_env.action_space_size
         self.init_epsilon = init_epsilon
         self.epsilon = init_epsilon
@@ -26,6 +26,7 @@ class Player:
         self.agent_history_length = agent_history_length
         self.learning_rate = learning_rate
         self.punishment = punishment
+        self.reward_extrapolation_exponent = reward_extrapolation_exponent
 
         self.memory = ReplayMemory(self.game_env.frame_height, self.game_env.frame_width,
                                    self.agent_history_length, self.total_memory_size,

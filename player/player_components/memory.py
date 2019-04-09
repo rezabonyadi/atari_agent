@@ -15,7 +15,8 @@ from keras import backend as K
 class ReplayMemory:
 
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
-                 is_graphical=True, use_spotlight=False, use_estimated_reward=True, punishment=0.0):
+                 is_graphical=True, use_spotlight=False, use_estimated_reward=True, punishment=0.0,
+                 reward_extrapolation_exponent=10.0):
         self.use_estimated_reward = use_estimated_reward
         self.use_spotlight = use_spotlight
         self.size = size
@@ -27,6 +28,7 @@ class ReplayMemory:
         self.current = 0
         self.is_graphical = is_graphical
         self.punishment = punishment
+        self.reward_extrapolation_exponent = reward_extrapolation_exponent
 
         self.actions = np.empty(self.size, dtype=np.int32)
         self.rewards = np.empty(self.size, dtype=np.float32)
@@ -93,7 +95,7 @@ class ReplayMemory:
 
     def get_estimated_reward(self, recent_reward, prev_reward_indx, recent_reward_indx, current_index):
         l = recent_reward_indx - prev_reward_indx
-        return recent_reward*np.power(current_index/l, 5)
+        return recent_reward*np.power(current_index/l, self.reward_extrapolation_exponent)
 
     def _get_state(self, index):
         if self.count is 0:
@@ -126,7 +128,6 @@ class ReplayMemory:
         for i, idx in enumerate(self.minibatch_indices):
             self.minibatch_states[i] = self._get_state(idx - 1)
             self.minibatch_new_states[i] = self._get_state(idx)
-
 
         return np.transpose(self.minibatch_states, axes=(0, 2, 3, 1)), self.actions[self.minibatch_indices], \
                self.rewards[self.minibatch_indices], np.transpose(self.minibatch_new_states, axes=(0, 2, 3, 1)), \

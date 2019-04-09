@@ -6,6 +6,7 @@ import os
 import json
 import csv
 
+
 class HandleResults:
 
     folder_to_use = ''
@@ -42,9 +43,10 @@ class HandleResults:
         player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'], settings_dict['BS'],
                         settings_dict['LEARNING_RATE'], settings_dict['INI_EPSILON'], settings_dict['END_EPSILON'],
                         settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
-                        settings_dict['UPDATE_FREQ'],
-                        settings_dict['DISCOUNT_FACTOR'], settings_dict['REPLAY_MEMORY_START_SIZE'],
-                        settings_dict['PUNISH'])
+                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
+                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
+                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'])
+
         return player, game_env, settings_dict['MAX_EPISODE_LENGTH'], settings_dict['MAX_EPISODES'], settings_dict
 
     def load_settings(self, folder, load_model):
