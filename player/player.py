@@ -29,10 +29,11 @@ class Player:
 
         self.memory = ReplayMemory(self.game_env.frame_height, self.game_env.frame_width,
                                    self.agent_history_length, self.total_memory_size,
-                                   self.batch_size, self.game_env.is_graphical)
+                                   self.batch_size, self.game_env.is_graphical,
+                                   punishment=self.punishment)
         self.learner = QLearner(self.n_actions, self.learning_rate,
                                self.game_env.frame_height, self.game_env.frame_width, self.agent_history_length,
-                                gamma=self.gamma, punishment=self.punishment)
+                                gamma=self.gamma)
         self.losses = []
         self.q_values = []
 

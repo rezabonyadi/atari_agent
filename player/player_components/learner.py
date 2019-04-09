@@ -17,7 +17,7 @@ from keras.initializers import VarianceScaling
 class QLearner:
     def __init__(self, n_actions, learning_rate=0.00001,
                  frame_height=84, frame_width=84, agent_history_length=4,
-                 batch_size=32, gamma=0.99, punishment=0.0):
+                 batch_size=32, gamma=0.99):
         self.n_actions = n_actions
         self.learning_rate = learning_rate
         self.frame_height = frame_height
@@ -25,7 +25,7 @@ class QLearner:
         self.agent_history_length = agent_history_length
         self.batch_size = batch_size
         self.gamma = gamma
-        self.punishment = punishment
+        # self.punishment = punishment
 
         self.main_learner = DQN(self.n_actions, self.learning_rate,
                                 self.frame_height, self.frame_width, agent_history_length)
@@ -90,7 +90,7 @@ class QLearner:
 
         for i in range(self.batch_size):
             if terminal_flags[i]:
-                self.targets[i] = rewards[i] - self.punishment
+                self.targets[i] = rewards[i]
             else:
                 self.targets[i] = rewards[i] + self.gamma * q_target[i, action[i]]
 

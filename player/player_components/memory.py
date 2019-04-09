@@ -13,8 +13,10 @@ from keras import backend as K
 
 class ReplayMemory:
 
-    def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32, is_graphical=True):
-        self.use_spotlight = True
+    def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
+                 is_graphical=True, use_spotlight=False, use_estimated_reward=True, punishment=0.0):
+        self.use_estimated_reward = use_estimated_reward
+        self.use_spotlight = use_spotlight
         self.size = size
         self.frame_height = frame_height
         self.frame_width = frame_width
@@ -23,6 +25,7 @@ class ReplayMemory:
         self.count = 0
         self.current = 0
         self.is_graphical = is_graphical
+        self.punishment = punishment
 
         self.actions = np.empty(self.size, dtype=np.int32)
         self.rewards = np.empty(self.size, dtype=np.float32)
@@ -60,13 +63,36 @@ class ReplayMemory:
             xx = False
 
         if not xx:
+            if terminal:
+                reward = -self.punishment
+
             self.actions[self.current] = action
             self.frames[self.current, ...] = frame
             self.rewards[self.current] = reward
             self.terminal_flags[self.current] = terminal
             self.sequence[self.current] = frame_in_seq
+            if self.use_estimated_reward:
+                self.revise_rewards(reward, terminal)
             self.count = max(self.count, self.current + 1)
             self.current = (self.current + 1) % self.size
+
+    def revise_rewards(self, current_reward, terminal):
+        if current_reward != 0:
+            prev_reward_indx = self.current - 1
+
+            while (self.sequence[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
+                    and (prev_reward_indx > 0):
+                prev_reward_indx -= 1
+
+            start_indx = prev_reward_indx + 1
+            end_indx = self.current
+
+            for i in range(start_indx, end_indx):
+                self.rewards[i] = self.get_estimated_reward(current_reward, start_indx, end_indx, i - start_indx)
+
+    def get_estimated_reward(self, recent_reward, prev_reward_indx, recent_reward_indx, current_index):
+        l = recent_reward_indx - prev_reward_indx
+        return recent_reward*np.power(current_index/l, 5)
 
     def _get_state(self, index):
         if self.count is 0:
