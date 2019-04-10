@@ -60,7 +60,7 @@ class ReplayMemory:
 
         self.spotlight = SpotlightAttention(input_shape)
 
-    @jit
+    # @jit
     def add_experience(self, action, frame, reward, terminal, frame_in_seq):
         self.min_reward = np.min((self.min_reward, reward))
         self.max_reward = np.max((self.max_reward, reward))
@@ -76,7 +76,7 @@ class ReplayMemory:
 
         if not seen_before:
             if terminal:
-                reward = -self.punishment
+                reward -= self.punishment
 
             self.actions[self.current] = action
             self.frames[self.current, ...] = frame
@@ -90,7 +90,7 @@ class ReplayMemory:
             self.count = max(self.count, self.current + 1)
             self.current = (self.current + 1) % self.size
 
-    @jit
+    # @jit
     def revise_rewards(self, current_reward):
         if current_reward != 0:
             prev_reward_indx = self.current - 1
@@ -107,12 +107,12 @@ class ReplayMemory:
             for i in range(start_indx, end_indx):
                 self.rewards[i] = self.get_estimated_reward(current_reward, sparsity_length, i - start_indx)
 
-    @jit
+    # @jit
     def get_estimated_reward(self, recent_reward, sparsity_length, current_index):
 
         return recent_reward*np.power(current_index/sparsity_length, self.reward_extrapolation_exponent)
 
-    @jit
+    # @jit
     def _get_state(self, index):
         if self.count is 0:
             raise ValueError("The replay memory is empty!")
@@ -120,7 +120,7 @@ class ReplayMemory:
             raise ValueError("Index must be min 3")
         return self.frames[index - self.agent_history_length + 1:index + 1, ...]
 
-    @jit
+    # @jit
     def _get_valid_indices(self):
         for i in range(self.batch_size):
             while True:
@@ -136,7 +136,7 @@ class ReplayMemory:
                 break
             self.minibatch_indices[i] = index
 
-    @jit
+    # @jit
     def get_minibatch(self):
         if self.count < self.agent_history_length:
             raise ValueError('Not enough memories to get a minibatch')

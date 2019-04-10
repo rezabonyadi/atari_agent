@@ -61,12 +61,12 @@ class QLearner:
         session = tf.Session(config=config)
         K.set_session(session)
 
-    @jit
+    # @jit
     def predict(self, states):
         actions_mask = np.ones((states.shape[0], self.n_actions))
         return self.main_learner.model.predict([states, actions_mask])  # separate old model to predict
 
-    @jit
+    # @jit
     def train(self, current_state_batch, actions, rewards, next_state_batch, terminal_flags):
 
         self.calculate_target_q_values(next_state_batch, terminal_flags, rewards)
@@ -79,12 +79,12 @@ class QLearner:
 
         return history.history['loss'][0]
 
-    @jit
+    # @jit
     def update_target_network(self):
         print('Updating the target network')
         self.target_learner.model.set_weights(self.main_learner.model.get_weights())
 
-    @jit
+    # @jit
     def calculate_target_q_values(self, next_state_batch, terminal_flags, rewards):
         actions_mask = np.ones((self.batch_size, self.n_actions))
         q_next_state = self.main_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
@@ -98,7 +98,7 @@ class QLearner:
             else:
                 self.targets[i] = rewards[i] + self.gamma * q_target[i, action[i]]
 
-    @jit
+    # @jit
     def action_selection_policy(self, q_values):
         # v = q_values - q_values.min(axis=1).reshape((-1, 1))
         # v += 1.0

@@ -5,8 +5,8 @@ import datetime
 from utils import HandleResults
 import numba
 
-# GAME_ENV = 'BreakoutDeterministic-v4'
-GAME_ENV = 'SpaceInvaders-v4'
+GAME_ENV = 'BreakoutDeterministic-v4'
+# GAME_ENV = 'SpaceInvaders-v4'
 # GAME_ENV = 'Alien-v4'
 # GAME_ENV = 'Amidar-v4'
 # GAME_ENV = 'PongDeterministic-v4'
