@@ -37,7 +37,11 @@ class ReplayMemory:
         else:
             self.frames = np.empty((self.size, self.frame_height), dtype=np.float16)
         self.terminal_flags = np.empty(self.size, dtype=np.bool)
-        self.sequence = np.empty(self.size, dtype=np.int)
+        self.frame_number_in_epison = np.empty(self.size, dtype=np.int)
+        self.sparsity_lengths = []
+        self.min_reward = 1000000.0
+        self.max_reward = -1000000.0
+
 
         if is_graphical:
             self.minibatch_states = np.empty((self.batch_size, self.agent_history_length,
@@ -56,16 +60,19 @@ class ReplayMemory:
         self.spotlight = SpotlightAttention(input_shape)
 
     def add_experience(self, action, frame, reward, terminal, frame_in_seq):
+        self.min_reward = np.min((self.min_reward, reward))
+        self.max_reward = np.max((self.max_reward, reward))
+
         if self.use_spotlight:
             f = np.expand_dims(frame, axis=0)
             f = np.expand_dims(f, axis=3)
 
-            xx = self.spotlight.seen_before(f)
+            seen_before = self.spotlight.seen_before(f)
             self.spotlight.spotlight_train(f)
         else:
-            xx = False
+            seen_before = False
 
-        if not xx:
+        if not seen_before:
             if terminal:
                 reward = -self.punishment
 
@@ -73,29 +80,31 @@ class ReplayMemory:
             self.frames[self.current, ...] = frame
             self.rewards[self.current] = reward
             self.terminal_flags[self.current] = terminal
-            self.sequence[self.current] = frame_in_seq
+            self.frame_number_in_epison[self.current] = frame_in_seq
             if self.use_estimated_reward:
-                self.revise_rewards(reward, terminal)
+                self.revise_rewards(reward)
             self.count = max(self.count, self.current + 1)
             self.current = (self.current + 1) % self.size
 
-    def revise_rewards(self, current_reward, terminal):
+    def revise_rewards(self, current_reward):
         if current_reward != 0:
             prev_reward_indx = self.current - 1
 
-            while (self.sequence[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
+            while (self.frame_number_in_epison[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
                     and (prev_reward_indx > 0):
                 prev_reward_indx -= 1
 
             start_indx = prev_reward_indx + 1
             end_indx = self.current
+            sparsity_length = end_indx - start_indx
+            self.sparsity_lengths.append(sparsity_length)
 
             for i in range(start_indx, end_indx):
-                self.rewards[i] = self.get_estimated_reward(current_reward, start_indx, end_indx, i - start_indx)
+                self.rewards[i] = self.get_estimated_reward(current_reward, sparsity_length, i - start_indx)
 
-    def get_estimated_reward(self, recent_reward, prev_reward_indx, recent_reward_indx, current_index):
-        l = recent_reward_indx - prev_reward_indx
-        return recent_reward*np.power(current_index/l, self.reward_extrapolation_exponent)
+    def get_estimated_reward(self, recent_reward, sparsity_length, current_index):
+
+        return recent_reward*np.power(current_index/sparsity_length, self.reward_extrapolation_exponent)
 
     def _get_state(self, index):
         if self.count is 0:
@@ -114,7 +123,7 @@ class ReplayMemory:
                     continue
                 # if self.terminal_flags[index - self.agent_history_length:index].any():
                 #     continue
-                if self.sequence[index] - self.sequence[index - self.agent_history_length] != self.agent_history_length:
+                if self.frame_number_in_epison[index] - self.frame_number_in_epison[index - self.agent_history_length] != self.agent_history_length:
                     continue
                 break
             self.minibatch_indices[i] = index

@@ -7,34 +7,34 @@ from keras.models import model_from_json
 
 
 class Player:
-    def __init__(self, game_env, agent_history_length, max_mem_size, batch_size,
+    def __init__(self, game_env, agent_history_length, total_memory_size, batch_size,
                  learning_rate, init_epsilon, end_epsilon, minimum_observe_episode,
                  update_target_frequency, train_frequency, gamma, exploratory_memory_size,
                  punishment, reward_extrapolation_exponent):
+
         self.n_actions = game_env.action_space_size
         self.init_epsilon = init_epsilon
         self.epsilon = init_epsilon
         self.end_epsilon = end_epsilon
         self.minimum_observe_episodes = minimum_observe_episode
         self.update_target_frequency = update_target_frequency
-        self.gamma = gamma
         self.game_env = game_env
         self.train_frequency = train_frequency
         self.exploratory_memory_size = exploratory_memory_size
-        self.total_memory_size = max_mem_size
-        self.batch_size = batch_size
-        self.agent_history_length = agent_history_length
-        self.learning_rate = learning_rate
-        self.punishment = punishment
-        self.reward_extrapolation_exponent = reward_extrapolation_exponent
+
+        if reward_extrapolation_exponent < 0:
+            use_estimated_reward = False
+        else:
+            use_estimated_reward = True
 
         self.memory = ReplayMemory(self.game_env.frame_height, self.game_env.frame_width,
-                                   self.agent_history_length, self.total_memory_size,
-                                   self.batch_size, self.game_env.is_graphical,
-                                   punishment=self.punishment)
-        self.learner = QLearner(self.n_actions, self.learning_rate,
-                               self.game_env.frame_height, self.game_env.frame_width, self.agent_history_length,
-                                gamma=self.gamma)
+                                   agent_history_length, total_memory_size,
+                                   batch_size, self.game_env.is_graphical,
+                                   punishment=punishment, use_estimated_reward=use_estimated_reward,
+                                   reward_extrapolation_exponent=reward_extrapolation_exponent)
+
+        self.learner = QLearner(self.n_actions, learning_rate, self.game_env.frame_height, self.game_env.frame_width,
+                                agent_history_length, gamma=gamma)
         self.losses = []
         self.q_values = []
 

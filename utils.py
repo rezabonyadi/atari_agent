@@ -13,10 +13,10 @@ class HandleResults:
     settings_file_name = 'settings.jsn'
     time = datetime.datetime.now()
 
-    def __init__(self, GAME_ENV):
+    def __init__(self, game_env, out_folder):
         # GAME_ENV = settings['GAME_ENV']
         d = datetime.datetime.now().strftime("%y_%m_%d_%H_%M_%S")
-        self.folder_to_use = ''.join(['./output/', GAME_ENV, '/results_', d, '/'])
+        self.folder_to_use = ''.join([out_folder, game_env, '/results_', d, '/'])
         os.makedirs(self.folder_to_use)
         self.results_file_name = ''.join([self.folder_to_use, 'results.csv'])
 

@@ -4,17 +4,18 @@ import numpy as np
 import datetime
 from utils import HandleResults
 
-# GAME_ENV = 'BreakoutDeterministic-v4'
-GAME_ENV = 'SpaceInvaders-v4'
+GAME_ENV = 'BreakoutDeterministic-v4'
+# GAME_ENV = 'SpaceInvaders-v4'
 # GAME_ENV = 'PongDeterministic-v4'
 # GAME_ENV = 'Alien-v4'
-results_handler = HandleResults(GAME_ENV)
+OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
+results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
 
 def run_episode(max_episode_length, episode, game_env, player, total_frames, evaluation=False):
     terminal_life_lost = game_env.reset()
     episode_reward = 0
-    episode_seq = 0
+    life_seq = 0
     frame_number = 0
     gif_frames = []
     while True:
@@ -23,24 +24,27 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
         action = player.take_action(current_state, episode, evaluation)
         processed_new_frame, reward, terminal, terminal_life_lost, original_frame = game_env.step(action)
 
-        if evaluation:
-            gif_frames.append(original_frame)
+        # if evaluation:
+        #     gif_frames.append(original_frame)
 
         if not evaluation:
-            player.updates(total_frames, episode, action, processed_new_frame, reward, terminal_life_lost, episode_seq)
+            player.updates(total_frames, episode, action, processed_new_frame, reward, terminal_life_lost, life_seq)
 
         episode_reward += reward
-        episode_seq += 1
+        life_seq += 1
 
         if terminal_life_lost:
-            episode_seq = 0
+            life_seq = 0
+
         # game_env.env.render()
         total_frames += 1
+        frame_number += 1
 
-        if terminal or frame_number >= max_episode_length:
+        if terminal:
             break
 
-        frame_number += 1
+        if (frame_number >= max_episode_length) and (not evaluation):
+            break
 
     return episode_reward, total_frames
 
@@ -59,9 +63,11 @@ def main_loop(load_folder='', load_model=False):
 
     highest_reward = 0
     total_frames = 0.0
+    prev_frames = 0.0
     all_rewards = np.zeros(max_number_of_episodes)
     time = datetime.datetime.now()
     prev_time = time
+    best_evaluation = 0
 
     for episode in range(max_number_of_episodes):
         episode_reward, total_frames = run_episode(max_episode_length, episode, game_env, player, total_frames)
@@ -72,10 +78,16 @@ def main_loop(load_folder='', load_model=False):
         if episode_reward>highest_reward:
             highest_reward = episode_reward
 
-        if episode % 10==0:
-            time_passed = (datetime.datetime.now() - time).total_seconds()
+        if episode % 10 == 0:
+            evaluation_reward, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
 
-            res_dict['time'] = str(datetime.datetime.now() - time)
+            if evaluation_reward > best_evaluation:
+                best_evaluation = evaluation_reward
+                print('Best eval: ', str(best_evaluation))
+
+            res_dict['best_eval'] = best_evaluation
+            now = datetime.datetime.now()
+            res_dict['time'] = str(now - time)
             res_dict['highest_reward'] = highest_reward
             res_dict['episode'] = episode
             res_dict['mean_rewards'] = np.mean(all_rewards[episode-10:episode])
@@ -83,8 +95,12 @@ def main_loop(load_folder='', load_model=False):
             res_dict['epsilon'] = player.epsilon
             res_dict['mean_loss'] = np.mean(player.losses[-100:])
             res_dict['memory_vol'] = player.memory.count
-            res_dict['fps'] = total_frames / time_passed
+            res_dict['fps'] = (total_frames - prev_frames) / ((now - prev_time).total_seconds())
 
             results_handler.save_res(res_dict)
+
+            prev_time = now
+            prev_frames = total_frames
+
 
 main_loop()
