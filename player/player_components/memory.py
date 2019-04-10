@@ -10,7 +10,7 @@ from keras import layers, callbacks
 from keras.models import Model
 from keras.optimizers import RMSprop, Adam
 from keras import backend as K
-from numba import *
+# from numba import *
 
 class ReplayMemory:
 

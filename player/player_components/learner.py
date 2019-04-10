@@ -12,7 +12,7 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.normalization import BatchNormalization
 from keras.layers.merge import Add
 from keras.initializers import VarianceScaling
-from numba import *
+# from numba import *
 
 class QLearner:
     def __init__(self, n_actions, learning_rate=0.00001,

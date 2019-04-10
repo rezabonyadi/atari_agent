@@ -4,7 +4,7 @@ import datetime
 from player.player_components.memory import ReplayMemory
 from player.player_components.learner import QLearner
 from keras.models import model_from_json
-from numba import *
+# from numba import *
 
 class Player:
     def __init__(self, game_env, agent_history_length, total_memory_size, batch_size,
