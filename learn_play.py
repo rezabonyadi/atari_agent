@@ -83,7 +83,7 @@ def main_loop(load_folder='', load_model=False):
 
             if evaluation_reward > best_evaluation:
                 best_evaluation = evaluation_reward
-                print('Best eval: ', str(best_evaluation))
+                # print('Best eval: ', str(best_evaluation))
 
             res_dict['best_eval'] = best_evaluation
             now = datetime.datetime.now()
