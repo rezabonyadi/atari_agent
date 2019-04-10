@@ -4,7 +4,7 @@ import datetime
 from player.player_components.memory import ReplayMemory
 from player.player_components.learner import QLearner
 from keras.models import model_from_json
-
+from numba import *
 
 class Player:
     def __init__(self, game_env, agent_history_length, total_memory_size, batch_size,
@@ -40,6 +40,7 @@ class Player:
 
         # self.actuator = ???
 
+    # @jit
     def take_action(self, current_state, episode, evaluation=False):
         if (np.random.rand() <= self.epsilon) or (episode < self.minimum_observe_episodes) and (not evaluation):
             action = np.random.randint(0, self.n_actions)
@@ -52,6 +53,7 @@ class Player:
 
         return action
 
+    # @jit
     def learn(self, no_passed_frames):
         if no_passed_frames % self.train_frequency == 0:
             current_state_batch, actions, rewards, next_state_batch, terminal_flags = self.memory.get_minibatch()
@@ -61,17 +63,20 @@ class Player:
         if no_passed_frames % self.update_target_frequency == 0:
             self.learner.update_target_network()
 
+    # @jit
     def updates(self, no_passed_frames, episode, action, processed_new_frame, reward, terminal_life_lost, episode_seq):
         self.memory.add_experience(action, processed_new_frame, reward, terminal_life_lost, episode_seq)
         if no_passed_frames > self.exploratory_memory_size:
             self.update_epsilon(episode)
             self.learn(no_passed_frames)
 
+    # @jit
     def update_epsilon(self, episode):
         self.epsilon -= 0.00001
         self.epsilon = max(self.epsilon, self.end_epsilon)
         # print('Epsilon: ', str(self.epsilon))
 
+    # @jit
     def save_player_learner(self, folder):
         model_json = self.learner.main_learner.model.to_json(indent=4)
         with open(''.join([folder, 'model_structure.jsn']), "w") as json_file:
@@ -79,6 +84,7 @@ class Player:
 
         self.learner.main_learner.model.save_weights(''.join([folder, 'model_weights.wts']))
 
+    # @jit
     def load_player_learner(self, folder):
         json_file = open(''.join([folder, 'model_structure.jsn']), 'r')
         loaded_model_json = json_file.read()

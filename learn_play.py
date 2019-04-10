@@ -3,12 +3,18 @@ from environments.simulator import Atari
 import numpy as np
 import datetime
 from utils import HandleResults
+import numba
 
-GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v4'
-# GAME_ENV = 'PongDeterministic-v4'
+# GAME_ENV = 'BreakoutDeterministic-v4'
+GAME_ENV = 'SpaceInvaders-v4'
 # GAME_ENV = 'Alien-v4'
-OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
+# GAME_ENV = 'Amidar-v4'
+# GAME_ENV = 'PongDeterministic-v4'
+# GAME_ENV = 'MontezumaRevenge-v4'
+# OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
+# OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
+OUT_FOLDER = './output/Punish_1_Reward_exploration_2/'
+
 results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
 
@@ -64,7 +70,7 @@ def main_loop(load_folder='', load_model=False):
     highest_reward = 0
     total_frames = 0.0
     prev_frames = 0.0
-    all_rewards = np.zeros(max_number_of_episodes)
+    all_rewards = []
     time = datetime.datetime.now()
     prev_time = time
     best_evaluation = 0
@@ -72,8 +78,8 @@ def main_loop(load_folder='', load_model=False):
     for episode in range(max_number_of_episodes):
         episode_reward, total_frames = run_episode(max_episode_length, episode, game_env, player, total_frames)
 
-        all_rewards[episode] = episode_reward
-        # all_rewards.append(episode_reward)
+        # all_rewards[episode] = episode_reward
+        all_rewards.append(episode_reward)
 
         if episode_reward>highest_reward:
             highest_reward = episode_reward
@@ -85,17 +91,18 @@ def main_loop(load_folder='', load_model=False):
                 best_evaluation = evaluation_reward
                 # print('Best eval: ', str(best_evaluation))
 
-            res_dict['best_eval'] = best_evaluation
             now = datetime.datetime.now()
             res_dict['time'] = str(now - time)
-            res_dict['highest_reward'] = highest_reward
             res_dict['episode'] = episode
-            res_dict['mean_rewards'] = np.mean(all_rewards[episode-10:episode])
             res_dict['total_frames'] = total_frames
-            res_dict['epsilon'] = player.epsilon
-            res_dict['mean_loss'] = np.mean(player.losses[-100:])
-            res_dict['memory_vol'] = player.memory.count
-            res_dict['fps'] = (total_frames - prev_frames) / ((now - prev_time).total_seconds())
+            res_dict['epsilon'] = format(player.epsilon, '.3f')
+            res_dict['highest_reward'] = highest_reward
+            res_dict['best_eval'] = best_evaluation
+            res_dict['mean_rewards'] = np.mean(all_rewards[-10:])
+            res_dict['mean_loss'] = format(np.mean(player.losses[-100:]), '.5f')
+            # res_dict['memory_vol'] = player.memory.count
+            # res_dict['fps'] = (total_frames - prev_frames) / ((now - prev_time).total_seconds())
+            res_dict['sparsity'] = np.mean(player.memory.sparsity_lengths[-10:])
 
             results_handler.save_res(res_dict)
 
