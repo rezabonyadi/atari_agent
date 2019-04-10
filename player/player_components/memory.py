@@ -17,6 +17,7 @@ class ReplayMemory:
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
                  is_graphical=True, use_spotlight=False, use_estimated_reward=True, punishment=0.0,
                  reward_extrapolation_exponent=10.0):
+
         self.use_estimated_reward = use_estimated_reward
         self.use_spotlight = use_spotlight
         self.size = size
@@ -81,8 +82,10 @@ class ReplayMemory:
             self.rewards[self.current] = reward
             self.terminal_flags[self.current] = terminal
             self.frame_number_in_epison[self.current] = frame_in_seq
+
             if self.use_estimated_reward:
                 self.revise_rewards(reward)
+
             self.count = max(self.count, self.current + 1)
             self.current = (self.current + 1) % self.size
 
