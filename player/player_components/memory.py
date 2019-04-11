@@ -28,7 +28,7 @@ class ReplayMemory:
         self.count = 0
         self.current = 0
         self.is_graphical = is_graphical
-        self.punishment = punishment
+        self.punishment_factor = punishment
         self.reward_extrapolation_exponent = reward_extrapolation_exponent
 
         self.actions = np.empty(self.size, dtype=np.int32)
@@ -76,7 +76,7 @@ class ReplayMemory:
 
         if not seen_before:
             if terminal:
-                reward -= self.punishment
+                reward -= (self.punishment_factor*(self.max_reward + 1.0))
 
             self.actions[self.current] = action
             self.frames[self.current, ...] = frame

@@ -13,7 +13,7 @@ GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'MontezumaRevenge-v4'
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
-OUT_FOLDER = './output/Punish_1_Reward_exploration_2/'
+OUT_FOLDER = './output/Punish_1_Reward_exploration_5/'
 
 results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
@@ -29,6 +29,10 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
         current_state = game_env.get_current_state()
         action = player.take_action(current_state, episode, evaluation)
         processed_new_frame, reward, terminal, terminal_life_lost, original_frame = game_env.step(action)
+
+        if frame_number >= max_episode_length:
+            terminal = True
+            terminal_life_lost = True
 
         # if evaluation:
         #     gif_frames.append(original_frame)
@@ -47,9 +51,6 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
         frame_number += 1
 
         if terminal:
-            break
-
-        if (frame_number >= max_episode_length) and (not evaluation):
             break
 
     return episode_reward, total_frames
@@ -99,7 +100,7 @@ def main_loop(load_folder='', load_model=False):
             res_dict['highest_reward'] = highest_reward
             res_dict['best_eval'] = best_evaluation
             res_dict['mean_rewards'] = np.mean(all_rewards[-10:])
-            res_dict['mean_loss'] = format(np.mean(player.losses[-100:]), '.5f')
+            res_dict['mean_loss'] = format(np.mean(player.losses[-10:]), '.5f')
             # res_dict['memory_vol'] = player.memory.count
             # res_dict['fps'] = (total_frames - prev_frames) / ((now - prev_time).total_seconds())
             res_dict['sparsity'] = np.mean(player.memory.sparsity_lengths[-10:])
