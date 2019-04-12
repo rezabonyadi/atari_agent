@@ -5,15 +5,16 @@ import datetime
 from utils import HandleResults
 import numba
 
-GAME_ENV = 'BreakoutDeterministic-v4'
+# GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v4'
 # GAME_ENV = 'Alien-v4'
 # GAME_ENV = 'Amidar-v4'
 # GAME_ENV = 'PongDeterministic-v4'
+GAME_ENV = 'Asterix-v4'
 # GAME_ENV = 'MontezumaRevenge-v4'
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
-OUT_FOLDER = './output/Punish_1_Reward_exploration_5/'
+OUT_FOLDER = './output/Punish_1_Reward_exploration_2/'
 
 results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
@@ -86,10 +87,10 @@ def main_loop(load_folder='', load_model=False):
             highest_reward = episode_reward
 
         if episode % 10 == 0:
-            evaluation_reward, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
+            # evaluation_reward, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
 
-            if evaluation_reward > best_evaluation:
-                best_evaluation = evaluation_reward
+            # if evaluation_reward > best_evaluation:
+            #     best_evaluation = evaluation_reward
                 # print('Best eval: ', str(best_evaluation))
 
             now = datetime.datetime.now()
@@ -98,7 +99,7 @@ def main_loop(load_folder='', load_model=False):
             res_dict['total_frames'] = total_frames
             res_dict['epsilon'] = format(player.epsilon, '.3f')
             res_dict['highest_reward'] = highest_reward
-            res_dict['best_eval'] = best_evaluation
+            # res_dict['best_eval'] = best_evaluation
             res_dict['mean_rewards'] = np.mean(all_rewards[-10:])
             res_dict['mean_loss'] = format(np.mean(player.losses[-10:]), '.5f')
             # res_dict['memory_vol'] = player.memory.count
