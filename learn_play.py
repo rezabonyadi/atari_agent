@@ -6,15 +6,20 @@ from utils import HandleResults
 import numba
 
 # GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v4'
-# GAME_ENV = 'Alien-v4'
-# GAME_ENV = 'Amidar-v4'
+# GAME_ENV = 'SpaceInvaders-v4' # 758 frames
+# GAME_ENV = 'Alien-v4' # 948 frames
+# GAME_ENV = 'Amidar-v4' # 812 frames
+# GAME_ENV = 'Venture-v4'
+# GAME_ENV = 'Assault-v4' # 876 frames
+# GAME_ENV = 'RoadRunner-v4' # 437 frames
 # GAME_ENV = 'PongDeterministic-v4'
-GAME_ENV = 'Asterix-v4'
+# GAME_ENV = 'Asterix-v4'
 # GAME_ENV = 'MontezumaRevenge-v4'
+GAME_ENV = 'ChopperCommand-v4'
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
-OUT_FOLDER = './output/Punish_1_Reward_exploration_2/'
+OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
+
 
 results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
