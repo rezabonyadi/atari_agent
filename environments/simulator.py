@@ -51,7 +51,7 @@ class Atari:
     def process(self, frame):
         # returns a (height, width, 1) array
         if self.is_graphical:
-            frame = frame[34:200, 0:160, :]
+            # frame = frame[34:200, 0:160, :]
             frame = resize(frame, (self.frame_height, self.frame_width))
             frame = rgb2gray(frame)
             frame = np.uint8(frame*255)

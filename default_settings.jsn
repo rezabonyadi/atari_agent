@@ -1,5 +1,5 @@
 {
-    "MAX_EPISODE_LENGTH": 10800,
+    "MAX_EPISODE_LENGTH": 18000,
     "NO_OP_STEPS": 10,
     "MAX_EPISODES": 2000,
     "AGENT_HISTORY_LENGTH": 4,
@@ -15,7 +15,7 @@
     "END_EPSILON": 0.1,
     "MIN_OBSERVE_EPISODE": 200,
     "GAME_ENV": "BreakoutDeterministic-v4",
-    "REWARD_EXTRAPOLATION_EXPONENT": 5.0,
+    "REWARD_EXTRAPOLATION_EXPONENT": 2.0,
     "frame_height": 84,
     "frame_width": 84
 }
