@@ -1,18 +1,14 @@
-from player.player import Player
-from environments.simulator import Atari
-import numpy as np
-import datetime
-from utils import HandleResults
-import numba
+import gym
 
-GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v4' # 758 frames
-# GAME_ENV = 'Alien-v4' # 948 frames
-# GAME_ENV = 'Amidar-v4' # 812 frames
-# GAME_ENV = 'Venture-v4'
-# GAME_ENV = 'Assault-v4' # 876 frames
-# GAME_ENV = 'RoadRunner-v4' # 437 frames
-# GAME_ENV = 'PongDeterministic-v4'
-# GAME_ENV = 'Asterix-v4'
-# GAME_ENV = 'MontezumaRevenge-v4'
+from gym import envs
+all_envs = list(envs.registry.all())
+
+for env in all_envs:
+    if ('v4' in env.id):
+        m = env.make()
+        if (m.observation_space.shape[0] >= 200):
+            print(env.id, ', ', m.observation_space)
+
+i=0
+
 
