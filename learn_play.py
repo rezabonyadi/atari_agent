@@ -5,7 +5,8 @@ import datetime
 from utils import HandleResults
 import numba
 
-GAME_ENV = 'BreakoutDeterministic-v4'
+# GAME_ENV = 'BreakoutDeterministic-v4'
+GAME_ENV = 'BerzerkDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v4' # 758 frames
 # GAME_ENV = 'Alien-v4' # 948 frames
 # GAME_ENV = 'Amidar-v4' # 812 frames
@@ -18,11 +19,9 @@ GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'ChopperCommand-v4'
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
-OUT_FOLDER = './output/Punish_1_Reward_exploration_2/'
-
+OUT_FOLDER = './output/Punish_1_Reward_exploration_5/'
 
 results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
-
 
 def run_episode(max_episode_length, episode, game_env, player, total_frames, evaluation=False):
     terminal_life_lost = game_env.reset()
