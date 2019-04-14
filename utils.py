@@ -6,6 +6,25 @@ import os
 import json
 import csv
 
+MAX_EPISODE_LENGTH= 18000
+NO_OP_STEPS= 10
+MAX_EPISODES= 2000
+AGENT_HISTORY_LENGTH= 4
+UPDATE_FREQ= 4
+NETW_UPDATE_FREQ= 10000
+REPLAY_MEMORY_START_SIZE = 50000
+DISCOUNT_FACTOR= 0.99
+MEMORY_SIZE = 1000000
+BS= 32
+LEARNING_RATE= 0.0001
+PUNISH= 1.0
+INI_EPSILON= 1.0
+END_EPSILON= 0.1
+MIN_OBSERVE_EPISODE= 200
+GAME_ENV= "BreakoutDeterministic-v4"
+REWARD_EXTRAPOLATION_EXPONENT = 2.0
+frame_height = 84
+frame_width = 84
 
 class HandleResults:
 
@@ -48,6 +67,41 @@ class HandleResults:
 
         return player, game_env, settings_dict['MAX_EPISODE_LENGTH'], settings_dict['MAX_EPISODES'], settings_dict
 
+    def load_default_settings_constants(self, GAME_ENV):
+
+        settings_dict = {}
+        file_name = './default_settings.jsn'  # default_settings.jsn i in the root
+        with open(file_name, 'rt') as json_file:
+            settings_dict = json.load(json_file)
+
+        settings_dict['GAME_ENV'] = GAME_ENV
+        settings_dict['AGENT_HISTORY_LENGTH'] = AGENT_HISTORY_LENGTH
+        settings_dict['MEMORY_SIZE'] = MEMORY_SIZE
+        settings_dict['BS'] = BS
+        settings_dict['LEARNING_RATE']=LEARNING_RATE
+        settings_dict['INI_EPSILON'] = INI_EPSILON
+        settings_dict['END_EPSILON'] = END_EPSILON
+        settings_dict['MIN_OBSERVE_EPISODE'] = MIN_OBSERVE_EPISODE
+        settings_dict['NETW_UPDATE_FREQ'] =NETW_UPDATE_FREQ
+        settings_dict['UPDATE_FREQ'] = UPDATE_FREQ
+        settings_dict['DISCOUNT_FACTOR'] = DISCOUNT_FACTOR
+        settings_dict['REPLAY_MEMORY_START_SIZE'] = REPLAY_MEMORY_START_SIZE
+        settings_dict['PUNISH'] = PUNISH
+        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'] = REWARD_EXTRAPOLATION_EXPONENT
+
+        game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
+                         agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'],
+                         no_op_steps=settings_dict['NO_OP_STEPS'])
+
+        player = Player(game_env, AGENT_HISTORY_LENGTH, MEMORY_SIZE, BS,
+                        LEARNING_RATE, INI_EPSILON, settings_dict['END_EPSILON'],
+                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
+                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
+                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
+                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'])
+
+        return player, game_env, settings_dict['MAX_EPISODE_LENGTH'], settings_dict['MAX_EPISODES'], settings_dict
+
     def load_settings(self, folder, load_model):
         settings_dict = {}
         with open(''.join([folder, self.settings_file_name]), 'rt') as json_file:
@@ -56,10 +110,13 @@ class HandleResults:
         game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
                          agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'], no_op_steps=settings_dict['NO_OP_STEPS'])
 
-        player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'], settings_dict['BS'],
+        player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'],
+                        settings_dict['BS'],
                         settings_dict['LEARNING_RATE'], settings_dict['INI_EPSILON'], settings_dict['END_EPSILON'],
-                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'], settings_dict['UPDATE_FREQ'],
-                        settings_dict['DISCOUNT_FACTOR'], settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'])
+                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
+                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
+                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
+                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'])
 
         if load_model:
             player.load_player_learner(folder)

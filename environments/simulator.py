@@ -3,7 +3,6 @@ import gym
 import tensorflow as tf
 from skimage.transform import resize
 from skimage.color import rgb2gray
-import cv2
 
 class Atari:
     """Wrapper for the environment provided by gym"""
