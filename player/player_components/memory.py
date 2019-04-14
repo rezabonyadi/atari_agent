@@ -110,7 +110,6 @@ class ReplayMemory:
 
     # @jit
     def get_estimated_reward(self, recent_reward, sparsity_length, current_index):
-
         return recent_reward*np.power(current_index/sparsity_length, self.reward_extrapolation_exponent)
 
     # @jit
