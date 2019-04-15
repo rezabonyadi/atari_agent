@@ -42,7 +42,7 @@ class Player:
 
     # @jit
     def take_action(self, current_state, episode, evaluation=False):
-        if (np.random.rand() <= self.epsilon) or (episode < self.minimum_observe_episodes) and (not evaluation):
+        if (np.random.rand() <= self.epsilon) or (episode < self.exploratory_memory_size) and (not evaluation):
             action = np.random.randint(0, self.n_actions)
         else:
             current_state = np.expand_dims(current_state, axis=0)
@@ -66,6 +66,8 @@ class Player:
     # @jit
     def updates(self, no_passed_frames, episode, action, processed_new_frame, reward, terminal_life_lost, episode_seq):
         self.memory.add_experience(action, processed_new_frame, reward, terminal_life_lost, episode_seq)
+        self.memory.update_reward_exponent(episode)
+
         if no_passed_frames > self.exploratory_memory_size:
             self.update_epsilon(episode)
             self.learn(no_passed_frames)

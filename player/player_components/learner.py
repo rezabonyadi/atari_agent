@@ -42,7 +42,7 @@ class QLearner:
     @staticmethod
     def set_computation_device():
         num_cores = 14
-        GPU = False
+        GPU = True
 
         if GPU:
             num_GPU = 1

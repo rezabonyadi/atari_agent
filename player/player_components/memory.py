@@ -108,6 +108,20 @@ class ReplayMemory:
             for i in range(start_indx, end_indx):
                 self.rewards[i] = self.get_estimated_reward(current_reward, sparsity_length, i - start_indx)
 
+    def update_reward_exponent(self, episode):
+        s_episode = 300
+        e_episode = 1000
+        s_exponent = 1.0
+        e_exponent = 10.0
+
+        if episode < s_episode:
+            self.reward_extrapolation_exponent = s_exponent
+        if episode > e_episode:
+            self.reward_extrapolation_exponent = e_exponent
+        if (episode >= s_episode) and (episode <= e_episode):
+            self.reward_extrapolation_exponent = \
+                ((e_exponent-s_exponent)/(e_episode-s_episode))*(episode-s_episode)+s_exponent
+
     # @jit
     def get_estimated_reward(self, recent_reward, sparsity_length, current_index):
         return recent_reward*np.power(current_index/sparsity_length, self.reward_extrapolation_exponent)
