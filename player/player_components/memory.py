@@ -33,6 +33,9 @@ class ReplayMemory:
 
         self.actions = np.empty(self.size, dtype=np.int32)
         self.rewards = np.empty(self.size, dtype=np.float32)
+        self.backfill_factor = np.empty(self.size, dtype=np.float32)
+        self.backfilled_reward = np.empty(self.size, dtype=np.float32)
+
         if is_graphical:
             self.frames = np.empty((self.size, self.frame_height, self.frame_width), dtype=np.uint8)
         else:
@@ -56,6 +59,8 @@ class ReplayMemory:
                                                   self.frame_height), dtype=np.float16)
 
         self.minibatch_indices = np.empty(self.batch_size, dtype=np.int32)
+        self.minibatch_rewards = np.empty(self.batch_size, dtype=np.float32)
+
         input_shape = (frame_height, frame_width, 1)
 
         self.spotlight = SpotlightAttention(input_shape)
@@ -86,13 +91,13 @@ class ReplayMemory:
             self.frame_number_in_epison[self.current] = frame_in_seq
 
             if self.use_estimated_reward:
-                self.revise_rewards(reward)
+                self.populate_reward_factors(reward)
 
             self.count = max(self.count, self.current + 1)
             self.current = (self.current + 1) % self.size
 
     # @jit
-    def revise_rewards(self, current_reward):
+    def populate_reward_factors(self, current_reward):
         if current_reward != 0:
             prev_reward_indx = self.current - 1
 
@@ -100,15 +105,23 @@ class ReplayMemory:
                     and (prev_reward_indx > 0):
                 prev_reward_indx -= 1
 
-            start_indx = prev_reward_indx + 1
+            start_indx = prev_reward_indx
             end_indx = self.current
-            sparsity_length = end_indx - start_indx
+            sparsity_length = end_indx - start_indx  # Length of consecutive zero rewards
             self.sparsity_lengths.append(sparsity_length)
 
             for i in range(start_indx, end_indx):
-                self.rewards[i] = self.get_estimated_reward(current_reward, sparsity_length, i - start_indx)
+                self.backfill_factor[i] = (i - start_indx) / sparsity_length
+                self.backfilled_reward[i] = current_reward
+
+            self.backfilled_reward[end_indx] = current_reward
+            self.backfill_factor[end_indx] = 1.0
 
     def update_reward_exponent(self, episode):
+        # s_episode = 700
+        # e_episode = 1600
+        # s_exponent = 2.0
+        # e_exponent = 20.0
         s_episode = 300
         e_episode = 1000
         s_exponent = 1.0
@@ -124,7 +137,8 @@ class ReplayMemory:
 
     # @jit
     def get_estimated_reward(self, recent_reward, sparsity_length, current_index):
-        return recent_reward*np.power(current_index/sparsity_length, self.reward_extrapolation_exponent)
+        # return recent_reward*np.power(current_index/sparsity_length, self.reward_extrapolation_exponent)
+        return current_index / sparsity_length
 
     # @jit
     def _get_state(self, index):
@@ -160,9 +174,14 @@ class ReplayMemory:
         for i, idx in enumerate(self.minibatch_indices):
             self.minibatch_states[i] = self._get_state(idx - 1)
             self.minibatch_new_states[i] = self._get_state(idx)
+            if self.use_estimated_reward:
+                self.minibatch_rewards[i] = self.backfilled_reward[idx] * \
+                                            np.power(self.backfill_factor[idx], self.reward_extrapolation_exponent)
+            else:
+                self.minibatch_rewards[i] = self.rewards[idx]
 
         return np.transpose(self.minibatch_states, axes=(0, 2, 3, 1)), self.actions[self.minibatch_indices], \
-               self.rewards[self.minibatch_indices], np.transpose(self.minibatch_new_states, axes=(0, 2, 3, 1)), \
+               self.minibatch_rewards, np.transpose(self.minibatch_new_states, axes=(0, 2, 3, 1)), \
                self.terminal_flags[self.minibatch_indices]
 
 

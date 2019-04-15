@@ -41,8 +41,8 @@ class Player:
         # self.actuator = ???
 
     # @jit
-    def take_action(self, current_state, episode, evaluation=False):
-        if (np.random.rand() <= self.epsilon) or (episode < self.exploratory_memory_size) and (not evaluation):
+    def take_action(self, current_state, total_frames, evaluation=False):
+        if (np.random.rand() <= self.epsilon) or (total_frames < self.exploratory_memory_size) and (not evaluation):
             action = np.random.randint(0, self.n_actions)
         else:
             current_state = np.expand_dims(current_state, axis=0)

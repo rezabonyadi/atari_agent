@@ -32,7 +32,7 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
     while True:
         # Get state, make action, get next state (rewards, terminal, ...), record the experience, train if necessary
         current_state = game_env.get_current_state()
-        action = player.take_action(current_state, episode, evaluation)
+        action = player.take_action(current_state, total_frames, evaluation)
         processed_new_frame, reward, terminal, terminal_life_lost, original_frame = game_env.step(action)
 
         if frame_number >= max_episode_length:
