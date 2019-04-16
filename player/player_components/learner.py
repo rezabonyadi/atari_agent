@@ -82,8 +82,11 @@ class QLearner:
 
     # @jit
     def update_target_network(self):
-        print('Updating the target network')
-        self.target_learner.model.set_weights(self.main_learner.model.get_weights())
+        if self.use_double_model:
+            print('Updating the target network')
+            self.target_learner.model.set_weights(self.main_learner.model.get_weights())
+        else:
+            print('Doubling is off, no need to update target network')
 
     # @jit
     def calculate_target_q_values(self, next_state_batch, terminal_flags, rewards):

@@ -6,8 +6,8 @@ from player.player_components.learner import QLearner
 from keras.models import model_from_json
 # from numba import *
 
-DOUBLE = True  # True if Double Q Learning models, otherwise False
-LINEAR_EXPLORATION_EXPONENT = True
+DOUBLE = False  # True if Double Q Learning models, otherwise False
+LINEAR_EXPLORATION_EXPONENT = False
 
 class Player:
     def __init__(self, game_env, agent_history_length, total_memory_size, batch_size,

@@ -12,6 +12,12 @@ from keras.optimizers import RMSprop, Adam
 from keras import backend as K
 # from numba import *
 
+START_EPISODE = 300
+END_EPISODE = 1000
+START_EXPONENT = 1.0
+END_EXPONENT = 10.0
+IGNORE_EXPONENT_EPISODE = 1500
+
 class ReplayMemory:
 
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
@@ -122,14 +128,10 @@ class ReplayMemory:
             self.backfill_factor[end_indx] = 1.0
 
     def update_reward_exponent(self, episode):
-        # s_episode = 700
-        # e_episode = 1600
-        # s_exponent = 2.0
-        # e_exponent = 20.0
-        s_episode = 300
-        e_episode = 1000
-        s_exponent = 1.0
-        e_exponent = 10.0
+        s_episode = START_EPISODE
+        e_episode = END_EPISODE
+        s_exponent = START_EXPONENT
+        e_exponent = END_EXPONENT
 
         if episode < s_episode:
             self.reward_extrapolation_exponent = s_exponent
@@ -139,7 +141,7 @@ class ReplayMemory:
             self.reward_extrapolation_exponent = \
                 ((e_exponent-s_exponent)/(e_episode-s_episode))*(episode-s_episode)+s_exponent
 
-        if e_episode > 1500:
+        if e_episode > IGNORE_EXPONENT_EPISODE:
             self.use_estimated_reward = False
 
     # # @jit
