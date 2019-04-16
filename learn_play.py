@@ -5,6 +5,27 @@ import datetime
 from utils import HandleResults
 import numba
 
+'''
+Set the main settings in the default_settings.jsn
+If you want punishment to work set the PUNISH in the setting file to non-zero
+REWARD_EXTRAPOLATION_EXPONENT controls the exponent for backfilling. Set to -1.0 to turn this off (i.e., use the 
+actual reward values only)
+Some settings are in player class:
+* If you want the Double Deep Q-Learning, set the DOUBLE in the player class to True. If that is False, it will be just 
+Deep Q-Learning (not Double)
+* If you want linear exponent decrease then set LINEAR_EXPLORATION_EXPONENT to True. It will use settings in the memory
+class to set the linear changes.
+
+Some settings are in the memory class:
+START_EPISODE: This will be the start episode of the linear increase. 
+END_EPISODE: This will be the end episode of the linear increase.
+START_EXPONENT: The start exponent (1.0)
+END_EXPONENT: Final exponent value (10.0)
+IGNORE_EXPONENT_EPISODE: At what episode ignore using the exponent (just punishment if on)
+ 
+'''
+
+
 GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'BerzerkDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v4' # 758 frames
