@@ -17,11 +17,11 @@ Deep Q-Learning (not Double)
 class to set the linear changes.
 
 Some settings are in the memory class:
-START_EPISODE: This will be the start episode of the linear increase. 
-END_EPISODE: This will be the end episode of the linear increase.
-START_EXPONENT: The start exponent (1.0)
-END_EXPONENT: Final exponent value (10.0)
-IGNORE_EXPONENT_EPISODE: At what episode ignore using the exponent (just punishment if on)
+* START_EPISODE: This will be the start episode of the linear increase. 
+* END_EPISODE: This will be the end episode of the linear increase.
+* START_EXPONENT: The start exponent (1.0)
+* END_EXPONENT: Final exponent value (10.0)
+* IGNORE_EXPONENT_EPISODE: At what episode ignore using the exponent (just punishment if on)
  
 '''
 
