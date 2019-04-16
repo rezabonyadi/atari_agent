@@ -17,7 +17,7 @@ from keras.initializers import VarianceScaling
 class QLearner:
     def __init__(self, n_actions, learning_rate=0.00001,
                  frame_height=84, frame_width=84, agent_history_length=4,
-                 batch_size=32, gamma=0.99):
+                 batch_size=32, gamma=0.99, use_double_model=True):
         self.n_actions = n_actions
         self.learning_rate = learning_rate
         self.frame_height = frame_height
@@ -25,6 +25,7 @@ class QLearner:
         self.agent_history_length = agent_history_length
         self.batch_size = batch_size
         self.gamma = gamma
+        self.use_double_model = use_double_model
         # self.punishment = punishment
 
         self.main_learner = DQN(self.n_actions, self.learning_rate,
@@ -89,8 +90,10 @@ class QLearner:
         actions_mask = np.ones((self.batch_size, self.n_actions))
         q_next_state = self.main_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
         action, _ = self.action_selection_policy(q_next_state)
-
-        q_target = self.target_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
+        if self.use_double_model:
+            q_target = self.target_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
+        else:
+            q_target = q_next_state
 
         for i in range(self.batch_size):
             if terminal_flags[i]:

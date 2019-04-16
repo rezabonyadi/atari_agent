@@ -6,6 +6,9 @@ from player.player_components.learner import QLearner
 from keras.models import model_from_json
 # from numba import *
 
+DOUBLE = True  # True if Double Q Learning models, otherwise False
+LINEAR_EXPLORATION_EXPONENT = True
+
 class Player:
     def __init__(self, game_env, agent_history_length, total_memory_size, batch_size,
                  learning_rate, init_epsilon, end_epsilon, minimum_observe_episode,
@@ -21,6 +24,8 @@ class Player:
         self.game_env = game_env
         self.train_frequency = train_frequency
         self.exploratory_memory_size = exploratory_memory_size
+        self.linear_exploration_exponent = LINEAR_EXPLORATION_EXPONENT
+        self.use_double_model = DOUBLE
 
         if reward_extrapolation_exponent < 0:
             use_estimated_reward = False
@@ -31,10 +36,11 @@ class Player:
                                    agent_history_length, total_memory_size,
                                    batch_size, self.game_env.is_graphical,
                                    punishment=punishment, use_estimated_reward=use_estimated_reward,
-                                   reward_extrapolation_exponent=reward_extrapolation_exponent)
+                                   reward_extrapolation_exponent=reward_extrapolation_exponent,
+                                   linear_exploration_exponent=self.linear_exploration_exponent)
 
         self.learner = QLearner(self.n_actions, learning_rate, self.game_env.frame_height, self.game_env.frame_width,
-                                agent_history_length, gamma=gamma)
+                                agent_history_length, gamma=gamma, use_double_model=self.use_double_model)
         self.losses = []
         self.q_values = []
 
@@ -65,8 +71,7 @@ class Player:
 
     # @jit
     def updates(self, no_passed_frames, episode, action, processed_new_frame, reward, terminal_life_lost, episode_seq):
-        self.memory.add_experience(action, processed_new_frame, reward, terminal_life_lost, episode_seq)
-        self.memory.update_reward_exponent(episode)
+        self.memory.add_experience(action, processed_new_frame, reward, terminal_life_lost, episode_seq, episode)
 
         if no_passed_frames > self.exploratory_memory_size:
             self.update_epsilon(episode)

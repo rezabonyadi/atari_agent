@@ -16,7 +16,7 @@ class ReplayMemory:
 
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
                  is_graphical=True, use_spotlight=False, use_estimated_reward=True, punishment=0.0,
-                 reward_extrapolation_exponent=10.0):
+                 reward_extrapolation_exponent=10.0, linear_exploration_exponent=True):
 
         self.use_estimated_reward = use_estimated_reward
         self.use_spotlight = use_spotlight
@@ -30,6 +30,7 @@ class ReplayMemory:
         self.is_graphical = is_graphical
         self.punishment_factor = punishment
         self.reward_extrapolation_exponent = reward_extrapolation_exponent
+        self.linear_exploration_exponent = linear_exploration_exponent
 
         self.actions = np.empty(self.size, dtype=np.int32)
         self.rewards = np.empty(self.size, dtype=np.float32)
@@ -66,9 +67,12 @@ class ReplayMemory:
         self.spotlight = SpotlightAttention(input_shape)
 
     # @jit
-    def add_experience(self, action, frame, reward, terminal, frame_in_seq):
+    def add_experience(self, action, frame, reward, terminal, frame_in_seq, episode):
         self.min_reward = np.min((self.min_reward, reward))
         self.max_reward = np.max((self.max_reward, reward))
+
+        if self.linear_exploration_exponent:
+            self.update_reward_exponent(episode)
 
         if self.use_spotlight:
             f = np.expand_dims(frame, axis=0)
