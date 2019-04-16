@@ -7,14 +7,9 @@ import numba
 
 '''
 Set the main settings in the default_settings.jsn
-If you want punishment to work set the PUNISH in the setting file to non-zero
-REWARD_EXTRAPOLATION_EXPONENT controls the exponent for backfilling. Set to -1.0 to turn this off (i.e., use the 
+* PUNISH controls the positive punishment, to be set to non-zero to work
+* REWARD_EXTRAPOLATION_EXPONENT controls the exponent for backfilling. Set to -1.0 to turn this off (i.e., use the 
 actual reward values only)
-Some settings are in player class:
-* If you want the Double Deep Q-Learning, set the DOUBLE in the player class to True. If that is False, it will be just 
-Deep Q-Learning (not Double)
-* If you want linear exponent decrease then set LINEAR_EXPLORATION_EXPONENT to True. It will use settings in the memory
-class to set the linear changes.
 
 Some settings are in the memory class:
 * START_EPISODE: This will be the start episode of the linear increase. 
@@ -25,8 +20,7 @@ Some settings are in the memory class:
  
 '''
 
-
-GAME_ENV = 'BreakoutDeterministic-v4'
+# GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'BerzerkDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v4' # 758 frames
 # GAME_ENV = 'Alien-v4' # 948 frames
@@ -35,7 +29,7 @@ GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'Assault-v4' # 876 frames
 # GAME_ENV = 'RoadRunner-v4' # 437 frames
 # GAME_ENV = 'PongDeterministic-v4'
-# GAME_ENV = 'AsterixDeterministic-v4'
+GAME_ENV = 'AsterixDeterministic-v4'
 # GAME_ENV = 'MontezumaRevenge-v4'
 # GAME_ENV = 'ChopperCommand-v4'
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
@@ -129,8 +123,10 @@ def main_loop(load_folder='', load_model=False):
             res_dict['mean_loss'] = format(np.mean(player.losses[-10:]), '.5f')
             # res_dict['memory_vol'] = player.memory.count
             # res_dict['fps'] = (total_frames - prev_frames) / ((now - prev_time).total_seconds())
-            res_dict['sparsity'] = np.mean(player.memory.sparsity_lengths[-10:])
+            # res_dict['sparsity'] = np.mean(player.memory.sparsity_lengths[-10:])
+            res_dict['estimating_reward'] = player.memory.use_estimated_reward
             res_dict['reward_exponent'] = player.memory.reward_extrapolation_exponent
+
             results_handler.save_res(res_dict)
 
             prev_time = now

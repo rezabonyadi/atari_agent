@@ -6,15 +6,12 @@ from player.player_components.learner import QLearner
 from keras.models import model_from_json
 # from numba import *
 
-DOUBLE = True  # True if Double Q Learning models, otherwise False
-LINEAR_EXPLORATION_EXPONENT = True
-
 
 class Player:
     def __init__(self, game_env, agent_history_length, total_memory_size, batch_size,
                  learning_rate, init_epsilon, end_epsilon, minimum_observe_episode,
                  update_target_frequency, train_frequency, gamma, exploratory_memory_size,
-                 punishment, reward_extrapolation_exponent):
+                 punishment, reward_extrapolation_exponent, linear_exploration_exponent, use_double):
 
         self.n_actions = game_env.action_space_size
         self.init_epsilon = init_epsilon
@@ -25,8 +22,8 @@ class Player:
         self.game_env = game_env
         self.train_frequency = train_frequency
         self.exploratory_memory_size = exploratory_memory_size
-        self.linear_exploration_exponent = LINEAR_EXPLORATION_EXPONENT
-        self.use_double_model = DOUBLE
+        self.linear_exploration_exponent = linear_exploration_exponent
+        self.use_double_model = use_double
 
         if reward_extrapolation_exponent < 0:
             use_estimated_reward = False

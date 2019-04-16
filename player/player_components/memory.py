@@ -18,6 +18,7 @@ START_EXPONENT = 1.0
 END_EXPONENT = 10.0
 IGNORE_EXPONENT_EPISODE = 1500
 
+
 class ReplayMemory:
 
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,

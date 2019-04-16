@@ -25,6 +25,8 @@ GAME_ENV= "BreakoutDeterministic-v4"
 REWARD_EXTRAPOLATION_EXPONENT = 2.0
 frame_height = 84
 frame_width = 84
+LINEAR_EXPLORATION_EXPONENT = True
+USE_DOUBLE_MODEL = True
 
 class HandleResults:
 
@@ -58,12 +60,7 @@ class HandleResults:
                          agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'],
                          no_op_steps=settings_dict['NO_OP_STEPS'])
 
-        player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'], settings_dict['BS'],
-                        settings_dict['LEARNING_RATE'], settings_dict['INI_EPSILON'], settings_dict['END_EPSILON'],
-                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
-                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
-                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
-                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'])
+        player = self.build_player(settings_dict, game_env)
 
         return player, game_env, settings_dict['MAX_EPISODE_LENGTH'], settings_dict['MAX_EPISODES'], settings_dict
 
@@ -88,17 +85,14 @@ class HandleResults:
         settings_dict['REPLAY_MEMORY_START_SIZE'] = REPLAY_MEMORY_START_SIZE
         settings_dict['PUNISH'] = PUNISH
         settings_dict['REWARD_EXTRAPOLATION_EXPONENT'] = REWARD_EXTRAPOLATION_EXPONENT
+        settings_dict['LINEAR_EXPLORATION_EXPONENT'] = LINEAR_EXPLORATION_EXPONENT
+        settings_dict['USE_DOUBLE_MODEL'] = USE_DOUBLE_MODEL
 
         game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
                          agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'],
                          no_op_steps=settings_dict['NO_OP_STEPS'])
 
-        player = Player(game_env, AGENT_HISTORY_LENGTH, MEMORY_SIZE, BS,
-                        LEARNING_RATE, INI_EPSILON, settings_dict['END_EPSILON'],
-                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
-                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
-                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
-                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'])
+        player = self.build_player(settings_dict, game_env)
 
         return player, game_env, settings_dict['MAX_EPISODE_LENGTH'], settings_dict['MAX_EPISODES'], settings_dict
 
@@ -110,13 +104,7 @@ class HandleResults:
         game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
                          agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'], no_op_steps=settings_dict['NO_OP_STEPS'])
 
-        player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'],
-                        settings_dict['BS'],
-                        settings_dict['LEARNING_RATE'], settings_dict['INI_EPSILON'], settings_dict['END_EPSILON'],
-                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
-                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
-                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
-                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'])
+        player = self.build_player(settings_dict, game_env)
 
         if load_model:
             player.load_player_learner(folder)
@@ -139,3 +127,13 @@ class HandleResults:
 
         print(res_dict)
 
+    def build_player(self, settings_dict, game_env):
+        player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'],
+                        settings_dict['BS'],
+                        settings_dict['LEARNING_RATE'], settings_dict['INI_EPSILON'], settings_dict['END_EPSILON'],
+                        settings_dict['MIN_OBSERVE_EPISODE'], settings_dict['NETW_UPDATE_FREQ'],
+                        settings_dict['UPDATE_FREQ'], settings_dict['DISCOUNT_FACTOR'],
+                        settings_dict['REPLAY_MEMORY_START_SIZE'], settings_dict['PUNISH'],
+                        settings_dict['REWARD_EXTRAPOLATION_EXPONENT'], settings_dict['LINEAR_EXPLORATION_EXPONENT'],
+                        settings_dict['USE_DOUBLE_MODEL'])
+        return player

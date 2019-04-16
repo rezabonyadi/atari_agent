@@ -10,12 +10,14 @@
     "MEMORY_SIZE": 1000000,
     "BS": 32,
     "LEARNING_RATE": 0.0001,
-    "PUNISH": 0.3,
+    "PUNISH": 0.5,
     "INI_EPSILON": 1.0,
     "END_EPSILON": 0.1,
     "MIN_OBSERVE_EPISODE": 200,
     "GAME_ENV": "BreakoutDeterministic-v4",
-    "REWARD_EXTRAPOLATION_EXPONENT": 10.0,
+    "REWARD_EXTRAPOLATION_EXPONENT": -10.0,
+    "LINEAR_EXPLORATION_EXPONENT": true,
+    "USE_DOUBLE_MODEL": true,
     "frame_height": 84,
     "frame_width": 84
 }
