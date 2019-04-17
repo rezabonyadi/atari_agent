@@ -17,10 +17,9 @@ Some settings are in the memory class:
 * START_EXPONENT: The start exponent (1.0)
 * END_EXPONENT: Final exponent value (10.0)
 * IGNORE_EXPONENT_EPISODE: At what episode ignore using the exponent (just punishment if on)
- 
-'''
+ '''
 
-# GAME_ENV = 'BreakoutDeterministic-v4'
+GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'BerzerkDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v4' # 758 frames
 # GAME_ENV = 'Alien-v4' # 948 frames
@@ -29,7 +28,7 @@ Some settings are in the memory class:
 # GAME_ENV = 'Assault-v4' # 876 frames
 # GAME_ENV = 'RoadRunner-v4' # 437 frames
 # GAME_ENV = 'PongDeterministic-v4'
-GAME_ENV = 'AsterixDeterministic-v4'
+# GAME_ENV = 'AsterixDeterministic-v4'
 # GAME_ENV = 'MontezumaRevenge-v4'
 # GAME_ENV = 'ChopperCommand-v4'
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
@@ -84,6 +83,11 @@ def main_loop(load_folder='', load_model=False):
     else:
         player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
             results_handler.load_default_settings(GAME_ENV)
+
+    for k, v in all_settings.items():
+        print(k, ': ', v)
+
+    print('****************************')
 
     results_handler.save_settings(all_settings, player)
     res_dict = {}
