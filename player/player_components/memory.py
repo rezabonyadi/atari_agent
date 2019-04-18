@@ -12,11 +12,11 @@ from keras.optimizers import RMSprop, Adam
 from keras import backend as K
 # from numba import *
 
-START_EPISODE = 300
-END_EPISODE = 1000
+START_EPISODE = 400
+END_EPISODE = 1800
 START_EXPONENT = 1.0
-END_EXPONENT = 10.0
-IGNORE_EXPONENT_EPISODE = 1500
+END_EXPONENT = 40.0
+IGNORE_EXPONENT_EPISODE = 2000
 
 
 class ReplayMemory:
