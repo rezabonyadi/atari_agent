@@ -19,25 +19,6 @@ Some settings are in the memory class:
 * IGNORE_EXPONENT_EPISODE: At what episode ignore using the exponent (just punishment if on)
  '''
 
-# GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'BerzerkDeterministic-v4'
-GAME_ENV = 'QbertDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v4' # 758 frames
-# GAME_ENV = 'Alien-v4' # 948 frames
-# GAME_ENV = 'Amidar-v4' # 812 frames
-# GAME_ENV = 'Venture-v4'
-# GAME_ENV = 'Assault-v4' # 876 frames
-# GAME_ENV = 'RoadRunner-v4' # 437 frames
-# GAME_ENV = 'PongDeterministic-v4'
-# GAME_ENV = 'AsterixDeterministic-v4'
-# GAME_ENV = 'MontezumaRevenge-v4'
-# GAME_ENV = 'ChopperCommand-v4'
-# OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
-# OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
-# OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/original/'
-
-results_handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
 def run_episode(max_episode_length, episode, game_env, player, total_frames, evaluation=False):
     terminal_life_lost = game_env.reset()
@@ -77,7 +58,7 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
     return episode_reward, total_frames
 
 
-def main_loop(load_folder='', load_model=False):
+def main_loop(results_handler, load_folder='', load_model=False):
 
     if load_folder is not '':
         player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
@@ -139,4 +120,23 @@ def main_loop(load_folder='', load_model=False):
             prev_frames = total_frames
 
 
-main_loop()
+# GAME_ENV = 'BreakoutDeterministic-v4'
+# GAME_ENV = 'BerzerkDeterministic-v4'
+GAME_ENV = 'QbertDeterministic-v4'
+# GAME_ENV = 'SpaceInvaders-v4' # 758 frames
+# GAME_ENV = 'Alien-v4' # 948 frames
+# GAME_ENV = 'Amidar-v4' # 812 frames
+# GAME_ENV = 'Venture-v4'
+# GAME_ENV = 'Assault-v4' # 876 frames
+# GAME_ENV = 'RoadRunner-v4' # 437 frames
+# GAME_ENV = 'PongDeterministic-v4'
+# GAME_ENV = 'AsterixDeterministic-v4'
+# GAME_ENV = 'MontezumaRevenge-v4'
+# GAME_ENV = 'ChopperCommand-v4'
+# OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
+# OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
+# OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
+OUT_FOLDER = './output/original/'
+handler = HandleResults(GAME_ENV, OUT_FOLDER)
+
+main_loop(handler)
