@@ -49,12 +49,17 @@ class HandleResults:
 
         player.save_player_learner(self.folder_to_use)
 
-    def load_default_settings(self, GAME_ENV):
+    def load_settings_default(self, GAME_ENV):
 
         settings_dict = {}
         file_name = './default_settings.jsn'  # default_settings.jsn i in the root
         with open(file_name, 'rt') as json_file:
             settings_dict = json.load(json_file)
+
+        return self.load_settings_dictionary(GAME_ENV, settings_dict)
+
+    def load_settings_dictionary(self, GAME_ENV, settings_dict):
+
         settings_dict['GAME_ENV'] = GAME_ENV
         game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
                          agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'],
@@ -67,9 +72,6 @@ class HandleResults:
     def load_default_settings_constants(self, GAME_ENV):
 
         settings_dict = {}
-        # file_name = './default_settings.jsn'  # default_settings.jsn i in the root
-        # with open(file_name, 'rt') as json_file:
-        #     settings_dict = json.load(json_file)
 
         settings_dict['GAME_ENV'] = GAME_ENV
         settings_dict['AGENT_HISTORY_LENGTH'] = AGENT_HISTORY_LENGTH
@@ -93,23 +95,14 @@ class HandleResults:
         settings_dict['MAX_EPISODE_LENGTH'] = MAX_EPISODE_LENGTH
         settings_dict['MAX_EPISODES'] = MAX_EPISODES
 
-        game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
-                         agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'],
-                         no_op_steps=settings_dict['NO_OP_STEPS'])
+        return self.load_settings_dictionary(GAME_ENV, settings_dict)
 
-        player = self.build_player(settings_dict, game_env)
-
-        return player, game_env, settings_dict['MAX_EPISODE_LENGTH'], settings_dict['MAX_EPISODES'], settings_dict
-
-    def load_settings(self, folder, load_model):
+    def load_settings_folder(self, folder, load_model):
         settings_dict = {}
         with open(''.join([folder, self.settings_file_name]), 'rt') as json_file:
             settings_dict = json.load(json_file)
 
-        game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
-                         agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'], no_op_steps=settings_dict['NO_OP_STEPS'])
-
-        player = self.build_player(settings_dict, game_env)
+        player, game_env, _, _, _ = self.load_settings_dictionary(GAME_ENV, settings_dict)
 
         if load_model:
             player.load_player_learner(folder)

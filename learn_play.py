@@ -62,10 +62,10 @@ def main_loop(results_handler, load_folder='', load_model=False):
 
     if load_folder is not '':
         player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
-            results_handler.load_settings(load_folder, load_model)
+            results_handler.load_settings_folder(load_folder, load_model)
     else:
         player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
-            results_handler.load_default_settings(GAME_ENV)
+            results_handler.load_settings_default(GAME_ENV)
 
     for k, v in all_settings.items():
         print(k, ': ', v)
@@ -119,7 +119,6 @@ def main_loop(results_handler, load_folder='', load_model=False):
             prev_time = now
             prev_frames = total_frames
 
-
 # GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'BerzerkDeterministic-v4'
 GAME_ENV = 'QbertDeterministic-v4'
@@ -137,6 +136,6 @@ GAME_ENV = 'QbertDeterministic-v4'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
 OUT_FOLDER = './output/original/'
-handler = HandleResults(GAME_ENV, OUT_FOLDER)
 
+handler = HandleResults(GAME_ENV, OUT_FOLDER)
 main_loop(handler)
