@@ -121,12 +121,16 @@ class ReplayMemory:
             sparsity_length = end_indx - start_indx  # Length of consecutive zero rewards
             self.sparsity_lengths.append(sparsity_length)
 
+            self.backfilled_reward[end_indx] = current_reward
+            self.backfill_factor[end_indx] = 1.0
+
+            if sparsity_length < 5:
+                return
+
             for i in range(start_indx, end_indx):
                 self.backfill_factor[i] = (i - start_indx) / sparsity_length
                 self.backfilled_reward[i] = current_reward
 
-            self.backfilled_reward[end_indx] = current_reward
-            self.backfill_factor[end_indx] = 1.0
 
     def update_reward_exponent(self, episode):
         s_episode = START_EPISODE

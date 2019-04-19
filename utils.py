@@ -67,19 +67,19 @@ class HandleResults:
     def load_default_settings_constants(self, GAME_ENV):
 
         settings_dict = {}
-        file_name = './default_settings.jsn'  # default_settings.jsn i in the root
-        with open(file_name, 'rt') as json_file:
-            settings_dict = json.load(json_file)
+        # file_name = './default_settings.jsn'  # default_settings.jsn i in the root
+        # with open(file_name, 'rt') as json_file:
+        #     settings_dict = json.load(json_file)
 
         settings_dict['GAME_ENV'] = GAME_ENV
         settings_dict['AGENT_HISTORY_LENGTH'] = AGENT_HISTORY_LENGTH
         settings_dict['MEMORY_SIZE'] = MEMORY_SIZE
         settings_dict['BS'] = BS
-        settings_dict['LEARNING_RATE']=LEARNING_RATE
+        settings_dict['LEARNING_RATE'] = LEARNING_RATE
         settings_dict['INI_EPSILON'] = INI_EPSILON
         settings_dict['END_EPSILON'] = END_EPSILON
         settings_dict['MIN_OBSERVE_EPISODE'] = MIN_OBSERVE_EPISODE
-        settings_dict['NETW_UPDATE_FREQ'] =NETW_UPDATE_FREQ
+        settings_dict['NETW_UPDATE_FREQ'] = NETW_UPDATE_FREQ
         settings_dict['UPDATE_FREQ'] = UPDATE_FREQ
         settings_dict['DISCOUNT_FACTOR'] = DISCOUNT_FACTOR
         settings_dict['REPLAY_MEMORY_START_SIZE'] = REPLAY_MEMORY_START_SIZE
@@ -87,6 +87,11 @@ class HandleResults:
         settings_dict['REWARD_EXTRAPOLATION_EXPONENT'] = REWARD_EXTRAPOLATION_EXPONENT
         settings_dict['LINEAR_EXPLORATION_EXPONENT'] = LINEAR_EXPLORATION_EXPONENT
         settings_dict['USE_DOUBLE_MODEL'] = USE_DOUBLE_MODEL
+        settings_dict['frame_height'] = frame_height
+        settings_dict['frame_width'] = frame_width
+        settings_dict['NO_OP_STEPS'] = NO_OP_STEPS
+        settings_dict['MAX_EPISODE_LENGTH'] = MAX_EPISODE_LENGTH
+        settings_dict['MAX_EPISODES'] = MAX_EPISODES
 
         game_env = Atari(settings_dict['GAME_ENV'], settings_dict['frame_height'], settings_dict['frame_width'],
                          agent_history_length=settings_dict['AGENT_HISTORY_LENGTH'],
