@@ -28,6 +28,7 @@ frame_width = 84
 LINEAR_EXPLORATION_EXPONENT = True
 USE_DOUBLE_MODEL = True
 
+
 class HandleResults:
 
     folder_to_use = ''

@@ -58,7 +58,7 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
     return episode_reward, total_frames
 
 
-def main_loop(results_handler, load_folder='', load_model=False):
+def learn_by_game(results_handler, load_folder='', load_model=False):
 
     if load_folder is not '':
         player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
@@ -121,7 +121,7 @@ def main_loop(results_handler, load_folder='', load_model=False):
 
 # GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'BerzerkDeterministic-v4'
-GAME_ENV = 'QbertDeterministic-v4'
+# GAME_ENV = 'QbertDeterministic-v4'
 # GAME_ENV = 'SpaceInvaders-v4' # 758 frames
 # GAME_ENV = 'Alien-v4' # 948 frames
 # GAME_ENV = 'Amidar-v4' # 812 frames
@@ -137,5 +137,8 @@ GAME_ENV = 'QbertDeterministic-v4'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
 OUT_FOLDER = './output/original/'
 
-handler = HandleResults(GAME_ENV, OUT_FOLDER)
-main_loop(handler)
+games = ['BreakoutDeterministic-v4', 'QbertDeterministic-v4', 'BerzerkDeterministic-v4']
+
+for GAME_ENV in games:
+    handler = HandleResults(GAME_ENV, OUT_FOLDER)
+    learn_by_game(handler)
