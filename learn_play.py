@@ -135,7 +135,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/original/'
+OUT_FOLDER = './output/original_te/'
 
 games = ['BreakoutDeterministic-v4', 'QbertDeterministic-v4', 'BerzerkDeterministic-v4']
 
