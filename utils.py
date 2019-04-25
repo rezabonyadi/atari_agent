@@ -40,7 +40,7 @@ class HandleResults:
         d = datetime.datetime.now().strftime("%y_%m_%d_%H_%M_%S")
         self.folder_to_use = ''.join([out_folder, game_env, '/results_', d, '/'])
         os.makedirs(self.folder_to_use)
-        self.results_file_name = ''.join([self.folder_to_use, 'results.csv'])
+        self.results_file_name = ''.join([self.folder_to_use, 'results_', game_env, '_', d, '.csv'])
 
     def save_settings(self, settings, player):
         settings_dict = settings
@@ -48,7 +48,7 @@ class HandleResults:
         with open(''.join([self.folder_to_use, 'settings.jsn']), 'wt') as outfile:
             json.dump(settings_dict, outfile, indent=4)
 
-        player.save_player_learner(self.folder_to_use)
+        # player.save_player_learner(self.folder_to_use)
 
     def load_settings_default(self, GAME_ENV):
 
