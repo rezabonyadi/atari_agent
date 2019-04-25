@@ -92,8 +92,8 @@ class ReplayMemory:
 
         if not seen_before:
             if terminal:
-                reward -= (self.punishment_factor*(self.max_reward + 1.0))
-                # reward -= self.punishment_factor
+                # reward -= (self.punishment_factor*(self.max_reward + 1.0))
+                reward -= self.punishment_factor
 
             self.actions[self.current] = action
             self.frames[self.current, ...] = frame
