@@ -39,7 +39,10 @@ class HandleResults:
         # GAME_ENV = settings['GAME_ENV']
         d = datetime.datetime.now().strftime("%y_%m_%d_%H_%M_%S")
         self.folder_to_use = ''.join([out_folder, game_env, '/results_', d, '/'])
-        os.makedirs(self.folder_to_use)
+
+        if not os.path.exists(self.folder_to_use):
+            os.makedirs(self.folder_to_use)
+
         self.results_file_name = ''.join([self.folder_to_use, 'results_', game_env, '_', d, '.csv'])
 
     def save_settings(self, settings, player):
