@@ -138,7 +138,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/punish_200/'
+OUT_FOLDER = './output/punish_10/'
 
 games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4']
