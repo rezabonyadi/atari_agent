@@ -60,12 +60,15 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
 
 def learn_by_game(results_handler, load_folder='', load_model=False):
 
-    if load_folder is not '':
-        player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
-            results_handler.load_settings_folder(load_folder, load_model)
-    else:
-        player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
-            results_handler.load_settings_default(GAME_ENV)
+    # if load_folder is not '':
+    #     player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
+    #         results_handler.load_settings_folder(load_folder, load_model)
+    # else:
+    #     player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
+    #         results_handler.load_settings_default(GAME_ENV)
+
+    player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
+        results_handler.load_default_settings_constants(GAME_ENV)
 
     for k, v in all_settings.items():
         print(k, ': ', v)
@@ -135,7 +138,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/punish_100/'
+OUT_FOLDER = './output/punish_50/'
 
 games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4']
