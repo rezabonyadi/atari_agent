@@ -140,9 +140,11 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
 OUT_FOLDER = './output/punish_200/'
 
-games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
+games = [
+    'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
-         'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4']
+    'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4'
+         ]
 
 for GAME_ENV in games:
     handler = HandleResults(GAME_ENV, OUT_FOLDER)
