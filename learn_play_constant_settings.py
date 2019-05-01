@@ -117,6 +117,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
             # res_dict['sparsity'] = np.mean(player.memory.sparsity_lengths[-10:])
             res_dict['estimating_reward'] = player.memory.use_estimated_reward
             res_dict['reward_exponent'] = player.memory.reward_extrapolation_exponent
+            res_dict['best_evaluation'] = best_evaluation
 
             results_handler.save_res(res_dict)
 
