@@ -32,14 +32,11 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
         action = player.take_action(current_state, total_frames, evaluation)
         processed_new_frame, reward, terminal, terminal_life_lost, original_frame = game_env.step(action)
 
-        if frame_number >= max_episode_length:
-            terminal = True
-            terminal_life_lost = True
-
-        # if evaluation:
-        #     gif_frames.append(original_frame)
-
         if not evaluation:
+            if frame_number >= max_episode_length:
+                terminal = True
+                terminal_life_lost = True
+
             player.updates(total_frames, episode, action, processed_new_frame, reward, terminal_life_lost, life_seq)
 
         episode_reward += reward
@@ -84,7 +81,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
     all_rewards = []
     time = datetime.datetime.now()
     prev_time = time
-    best_evaluation = 0
+    best_evaluation = -100000
 
     for episode in range(max_number_of_episodes):
         episode_reward, total_frames = run_episode(max_episode_length, episode, game_env, player, total_frames)
@@ -96,10 +93,14 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
             highest_reward = episode_reward
 
         if episode % 10 == 0:
-            # evaluation_reward, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
+            evaluation_reward = 0
+            for i in range(100):
+                r, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
+                evaluation_reward += r
+            evaluation_reward /= 100
 
-            # if evaluation_reward > best_evaluation:
-            #     best_evaluation = evaluation_reward
+            if evaluation_reward > best_evaluation:
+                best_evaluation = evaluation_reward
                 # print('Best eval: ', str(best_evaluation))
 
             now = datetime.datetime.now()
@@ -149,3 +150,4 @@ games = [
 for GAME_ENV in games:
     handler = HandleResults(GAME_ENV, OUT_FOLDER)
     learn_by_game(handler)
+
