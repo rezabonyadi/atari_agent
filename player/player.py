@@ -71,7 +71,15 @@ class Player:
             self.learner.update_target_network()
 
     def calculate_punishment(self):
-        punishment = self.punishment
+        punishment = np.mean(self.memory.rewards_values[-100:]) \
+                     * np.mean(self.memory.terminal_lengths[-100:]) / np.mean(self.memory.sparsity_lengths[-100:])
+
+        if np.isnan(punishment):
+            punishment = 0.0
+
+        # punishment = np.max([punishment, self.punishment])
+        self.punishment = punishment
+
         return -punishment
 
     # @jit
