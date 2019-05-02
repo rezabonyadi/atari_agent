@@ -24,6 +24,7 @@ class Player:
         self.exploratory_memory_size = exploratory_memory_size
         self.linear_exploration_exponent = linear_exploration_exponent
         self.use_double_model = use_double
+        self.punishment = punishment
 
         if reward_extrapolation_exponent < 0:
             use_estimated_reward = False
@@ -32,8 +33,7 @@ class Player:
 
         self.memory = ReplayMemory(self.game_env.frame_height, self.game_env.frame_width,
                                    agent_history_length, total_memory_size,
-                                   batch_size, self.game_env.is_graphical,
-                                   punishment=punishment, use_estimated_reward=use_estimated_reward,
+                                   batch_size, self.game_env.is_graphical,use_estimated_reward=use_estimated_reward,
                                    reward_extrapolation_exponent=reward_extrapolation_exponent,
                                    linear_exploration_exponent=self.linear_exploration_exponent)
 
@@ -61,11 +61,18 @@ class Player:
     def learn(self, no_passed_frames):
         if no_passed_frames % self.train_frequency == 0:
             current_state_batch, actions, rewards, next_state_batch, terminal_flags = self.memory.get_minibatch()
-            loss = self.learner.train(current_state_batch, actions, rewards, next_state_batch, terminal_flags)
+
+            punishment = self.calculate_punishment()
+
+            loss = self.learner.train(current_state_batch, actions, rewards, next_state_batch, terminal_flags, punishment)
             self.losses.append(loss)
 
         if no_passed_frames % self.update_target_frequency == 0:
             self.learner.update_target_network()
+
+    def calculate_punishment(self):
+        punishment = self.punishment
+        return -punishment
 
     # @jit
     def updates(self, no_passed_frames, episode, action, processed_new_frame, reward, terminal_life_lost, episode_seq):

@@ -22,7 +22,7 @@ IGNORE_EXPONENT_EPISODE = 2000
 class ReplayMemory:
 
     def __init__(self, frame_height, frame_width, agent_history_length=4, size=1000000, batch_size=32,
-                 is_graphical=True, use_spotlight=False, use_estimated_reward=True, punishment=0.0,
+                 is_graphical=True, use_spotlight=False, use_estimated_reward=True,
                  reward_extrapolation_exponent=10.0, linear_exploration_exponent=True):
 
         self.use_estimated_reward = use_estimated_reward
@@ -35,7 +35,6 @@ class ReplayMemory:
         self.count = 0
         self.current = 0
         self.is_graphical = is_graphical
-        self.punishment_factor = punishment
         self.reward_extrapolation_exponent = reward_extrapolation_exponent
         self.linear_exploration_exponent = linear_exploration_exponent
 
@@ -51,9 +50,12 @@ class ReplayMemory:
         self.terminal_flags = np.empty(self.size, dtype=np.bool)
         self.frame_number_in_epison = np.empty(self.size, dtype=np.int)
         self.sparsity_lengths = []
+        self.terminal_lengths = []
+        self.rewards_values = []
         self.min_reward = 0.0
         self.max_reward = 0.0
-
+        self.prev_reward = 0
+        self.prev_terminal = 0
 
         if is_graphical:
             self.minibatch_states = np.empty((self.batch_size, self.agent_history_length,
@@ -91,15 +93,26 @@ class ReplayMemory:
             seen_before = False
 
         if not seen_before:
-            if terminal:
-                # reward -= (self.punishment_factor*(self.max_reward + 1.0))
-                reward -= self.punishment_factor
+            # if terminal:
+            #     # reward -= (self.punishment_factor*(self.max_reward + 1.0))
+            #     reward -= self.punishment_factor
 
             self.actions[self.current] = action
             self.frames[self.current, ...] = frame
             self.rewards[self.current] = reward
             self.terminal_flags[self.current] = terminal
             self.frame_number_in_epison[self.current] = frame_in_seq
+
+            if terminal:
+                terminal_length = self.current - self.prev_terminal # Length of consecutive zero rewards
+                self.terminal_lengths.append(terminal_length)
+                self.prev_terminal = self.current
+
+            if reward != 0:
+                sparsity_length = self.current - self.prev_reward  # Length of consecutive zero rewards
+                self.sparsity_lengths.append(sparsity_length)
+                self.rewards_values.append(reward)
+                self.prev_reward = self.current
 
             if self.use_estimated_reward:
                 self.populate_reward_factors(reward)
@@ -110,16 +123,15 @@ class ReplayMemory:
     # @jit
     def populate_reward_factors(self, current_reward):
         if current_reward != 0:
-            prev_reward_indx = self.current - 1
+            # prev_reward_indx = self.current - 1
+            #
+            # while (self.frame_number_in_epison[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
+            #         and (prev_reward_indx > 0):
+            #     prev_reward_indx -= 1
 
-            while (self.frame_number_in_epison[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
-                    and (prev_reward_indx > 0):
-                prev_reward_indx -= 1
-
-            start_indx = prev_reward_indx + 1
+            start_indx = self.prev_reward + 1
             end_indx = self.current
             sparsity_length = end_indx - start_indx  # Length of consecutive zero rewards
-            self.sparsity_lengths.append(sparsity_length)
 
             self.backfilled_reward[end_indx] = current_reward
             self.backfill_factor[end_indx] = 1.0

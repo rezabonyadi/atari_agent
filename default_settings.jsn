@@ -10,7 +10,7 @@
     "MEMORY_SIZE": 1000000,
     "BS": 32,
     "LEARNING_RATE": 0.0001,
-    "PUNISH": 100.0,
+    "PUNISH": 1.0,
     "INI_EPSILON": 1.0,
     "END_EPSILON": 0.1,
     "MIN_OBSERVE_EPISODE": 200,

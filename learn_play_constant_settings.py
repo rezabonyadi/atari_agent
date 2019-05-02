@@ -93,14 +93,14 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
             highest_reward = episode_reward
 
         if episode % 10 == 0:
-            evaluation_reward = 0
-            for i in range(100):
-                r, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
-                evaluation_reward += r
-            evaluation_reward /= 100
-
-            if evaluation_reward > best_evaluation:
-                best_evaluation = evaluation_reward
+            # evaluation_reward = 0
+            # for i in range(100):
+            #     r, _ = run_episode(max_episode_length, episode, game_env, player, 0, evaluation=True)
+            #     evaluation_reward += r
+            # evaluation_reward /= 100
+            #
+            # if evaluation_reward > best_evaluation:
+            #     best_evaluation = evaluation_reward
                 # print('Best eval: ', str(best_evaluation))
 
             now = datetime.datetime.now()
@@ -115,9 +115,14 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
             # res_dict['memory_vol'] = player.memory.count
             # res_dict['fps'] = (total_frames - prev_frames) / ((now - prev_time).total_seconds())
             # res_dict['sparsity'] = np.mean(player.memory.sparsity_lengths[-10:])
-            res_dict['estimating_reward'] = player.memory.use_estimated_reward
-            res_dict['reward_exponent'] = player.memory.reward_extrapolation_exponent
-            res_dict['best_evaluation'] = best_evaluation
+            # res_dict['estimating_reward'] = player.memory.use_estimated_reward
+            # res_dict['reward_exponent'] = player.memory.reward_extrapolation_exponent
+            res_dict['terminal_freq'] = format(np.mean(player.memory.terminal_lengths[-100:]), '.3f')
+            res_dict['sparsity_freq'] = format(np.mean(player.memory.sparsity_lengths[-100:]), '.3f')
+            res_dict['reward_values'] = format(np.mean(player.memory.rewards_values[-100:]), '.3f')
+            res_dict['punishment'] = format(player.punishment, '.3f')
+
+            # res_dict['best_evaluation'] = best_evaluation
 
             results_handler.save_res(res_dict)
 
@@ -147,6 +152,7 @@ games = [
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
     'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4'
          ]
+games = ['SpaceInvadersDeterministic-v4']
 
 for GAME_ENV in games:
     handler = HandleResults(GAME_ENV, OUT_FOLDER)

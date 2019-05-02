@@ -68,9 +68,9 @@ class QLearner:
         return self.main_learner.model.predict([states, actions_mask])  # separate old model to predict
 
     # @jit
-    def train(self, current_state_batch, actions, rewards, next_state_batch, terminal_flags):
+    def train(self, current_state_batch, actions, rewards, next_state_batch, terminal_flags, punishment):
 
-        self.calculate_target_q_values(next_state_batch, terminal_flags, rewards)
+        self.calculate_target_q_values(next_state_batch, terminal_flags, rewards, punishment)
 
         one_hot_actions = np.eye(self.n_actions)[np.array(actions).reshape(-1)]
         one_hot_targets = one_hot_actions * self.targets[:, None]
@@ -89,7 +89,7 @@ class QLearner:
             print('Doubling is off, no need to update target network')
 
     # @jit
-    def calculate_target_q_values(self, next_state_batch, terminal_flags, rewards):
+    def calculate_target_q_values(self, next_state_batch, terminal_flags, rewards, punishment):
         actions_mask = np.ones((self.batch_size, self.n_actions))
         q_next_state = self.main_learner.model.predict([next_state_batch, actions_mask])  # separate old model to predict
         action, _ = self.action_selection_policy(q_next_state)
@@ -100,7 +100,7 @@ class QLearner:
 
         for i in range(self.batch_size):
             if terminal_flags[i]:
-                self.targets[i] = rewards[i]
+                self.targets[i] = punishment  # rewards[i]
             else:
                 self.targets[i] = rewards[i] + self.gamma * q_target[i, action[i]]
 
