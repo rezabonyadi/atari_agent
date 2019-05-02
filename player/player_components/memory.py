@@ -112,36 +112,36 @@ class ReplayMemory:
                 sparsity_length = self.current - self.prev_reward  # Length of consecutive zero rewards
                 self.sparsity_lengths.append(sparsity_length)
                 self.rewards_values.append(reward)
-                self.prev_reward = self.current
 
-            if self.use_estimated_reward:
-                self.populate_reward_factors(reward)
+                if self.use_estimated_reward:
+                    self.populate_reward_factors(reward)
+
+                self.prev_reward = self.current
 
             self.count = max(self.count, self.current + 1)
             self.current = (self.current + 1) % self.size
 
     # @jit
     def populate_reward_factors(self, current_reward):
-        if current_reward != 0:
-            # prev_reward_indx = self.current - 1
-            #
-            # while (self.frame_number_in_epison[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
-            #         and (prev_reward_indx > 0):
-            #     prev_reward_indx -= 1
+        # prev_reward_indx = self.current - 1
+        #
+        # while (self.frame_number_in_epison[prev_reward_indx] > 0) and (self.rewards[prev_reward_indx] == 0.0) \
+        #         and (prev_reward_indx > 0):
+        #     prev_reward_indx -= 1
 
-            start_indx = self.prev_reward + 1
-            end_indx = self.current
-            sparsity_length = end_indx - start_indx  # Length of consecutive zero rewards
+        start_indx = self.prev_reward + 1
+        end_indx = self.current
+        sparsity_length = end_indx - start_indx  # Length of consecutive zero rewards
 
-            self.backfilled_reward[end_indx] = current_reward
-            self.backfill_factor[end_indx] = 1.0
+        self.backfilled_reward[end_indx] = current_reward
+        self.backfill_factor[end_indx] = 1.0
 
-            if sparsity_length < 5:
-                return
+        if sparsity_length < 5:
+            return
 
-            for i in range(start_indx, end_indx):
-                self.backfill_factor[i] = (i - start_indx) / sparsity_length
-                self.backfilled_reward[i] = current_reward
+        for i in range(start_indx, end_indx):
+            self.backfill_factor[i] = (i - start_indx) / sparsity_length
+            self.backfilled_reward[i] = current_reward
 
     def update_reward_exponent(self, episode):
         s_episode = START_EPISODE
