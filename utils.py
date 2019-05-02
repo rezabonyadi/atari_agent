@@ -45,13 +45,14 @@ class HandleResults:
 
         self.results_file_name = ''.join([self.folder_to_use, 'results_', game_env, '_', d, '.csv'])
 
-    def save_settings(self, settings, player):
+    def save_settings(self, settings, player= None):
         settings_dict = settings
 
         with open(''.join([self.folder_to_use, 'settings.jsn']), 'wt') as outfile:
             json.dump(settings_dict, outfile, indent=4)
 
-        # player.save_player_learner(self.folder_to_use)
+        if player is not None:
+            player.save_player_learner(self.folder_to_use)
 
     def load_settings_default(self, GAME_ENV):
 

@@ -72,7 +72,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 
     print('****************************')
 
-    results_handler.save_settings(all_settings, player)
+    results_handler.save_settings(all_settings)
     res_dict = {}
 
     highest_reward = 0
@@ -128,6 +128,8 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 
             prev_time = now
             prev_frames = total_frames
+
+    results_handler.save_settings(all_settings, player)
 
 # GAME_ENV = 'BreakoutDeterministic-v4'
 # GAME_ENV = 'BerzerkDeterministic-v4'
