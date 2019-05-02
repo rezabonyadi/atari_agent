@@ -157,6 +157,7 @@ OUT_FOLDER = './output/punish_200/'
 games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
 'RiverraidDeterministic-v4']
 
+
 # games = ['SpaceInvadersDeterministic-v4']
 
 for GAME_ENV in games:
