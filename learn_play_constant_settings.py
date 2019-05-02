@@ -3,7 +3,8 @@ from environments.simulator import Atari
 import numpy as np
 import datetime
 from utils import HandleResults
-import numba
+import sys
+
 
 '''
 Set the main settings in the default_settings.jsn
@@ -147,7 +148,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/punish_1_exp_2/'
+# OUT_FOLDER = './output/punish_1_exp_2/'
 
 # games = [
 #     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
@@ -156,13 +157,19 @@ OUT_FOLDER = './output/punish_1_exp_2/'
 #          ]
 
 
-games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
-'RiverraidDeterministic-v4']
+# games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
+# 'RiverraidDeterministic-v4']
+#
+# games = ['SpaceInvadersDeterministic-v4']
+#
+# for GAME_ENV in games:
+#     handler = HandleResults(GAME_ENV, OUT_FOLDER)
+#     learn_by_game(handler)
 
+GAME_ENV = sys.argv[1]
+OUT_FOLDER = sys.argv[2]
 
-games = ['SpaceInvadersDeterministic-v4']
+# print(sys.argv)
 
-for GAME_ENV in games:
-    handler = HandleResults(GAME_ENV, OUT_FOLDER)
-    learn_by_game(handler)
-
+handler = HandleResults(GAME_ENV, OUT_FOLDER)
+learn_by_game(handler)
