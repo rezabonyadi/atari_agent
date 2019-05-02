@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --job-name=p10
+#SBATCH --job-name=p50
 #SBATCH -n 2
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=32000
-#SBATCH -o re_out_p10.txt
-#SBATCH -e re_error_p10.txt
+#SBATCH -o re_out_p50.txt
+#SBATCH -e re_error_p50.txt
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 
