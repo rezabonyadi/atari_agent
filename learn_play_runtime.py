@@ -156,7 +156,6 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 #     'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4'
 #          ]
 
-
 # games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
 # 'RiverraidDeterministic-v4']
 
