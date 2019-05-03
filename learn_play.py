@@ -139,7 +139,9 @@ OUT_FOLDER = './output/punish_100/'
 
 games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4']
+
 games = ['BreakoutDeterministic-v4']
+
 for GAME_ENV in games:
     handler = HandleResults(GAME_ENV, OUT_FOLDER)
     learn_by_game(handler)
