@@ -10,4 +10,4 @@
 #SBATCH -e re_err_p100_1_GravitarDeterministic-v4.txt 
 module load anaconda/3.6 
 source activate /opt/ohpc/pub/apps/atari 
-srun -n2 python ../../learn_play_runtime.py GravitarDeterministic-v4 ../../output/punish_100_1/ 100.0 -2.0 False True --num_gpus=1 
+srun -n2 python ../learn_play_runtime.py GravitarDeterministic-v4 ../output/punish_100_1/ 100.0 -2.0 False True --num_gpus=1 
