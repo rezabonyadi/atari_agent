@@ -40,7 +40,7 @@ f = open(''.join(['Run_', analysis_name, '.sh']), 'w')
 for game_name in games:
 # game_name = ' GravitarDeterministic-v4'
     f_name = ''.join([game_name, '.sh'])
-    f.write(''.join(['sbatch ', f_name , ' \n']))
+    f.write(''.join(['sbatch ', directory, '/', f_name , ' \n']))
     job_name = ''.join([analysis_name, '_', game_name])
     out_file = ''.join(['re_out_', job_name, '.txt'])
     error_file = ''.join(['re_err_', job_name, '.txt'])
