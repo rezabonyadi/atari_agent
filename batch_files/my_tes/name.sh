@@ -5,7 +5,7 @@
 #SBATCH --mem=32000 
 #SBATCH --partition=gpu 
 #SBATCH --gres=gpu:1 
-#SBATCH --job-name=p100_grv 
+#SBATCH --job-name=p100_Gr1 
 #SBATCH -o re_out_p100_Gr1.txt 
 #SBATCH -e re_error_p100_Gr1.txt 
 module load anaconda/3.6 

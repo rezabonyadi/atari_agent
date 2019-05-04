@@ -8,7 +8,7 @@ out_directory_game = ' ../../output/punish_100_1/'
 params = ' 100.0 -2.0 False True'
 
 f_name = 'name.sh'
-job_name = 'p100_grv'
+job_name = 'p100_Gr1'
 out_file = 're_out_p100_Gr1.txt'
 error_file = 're_error_p100_Gr1.txt'
 
