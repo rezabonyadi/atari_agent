@@ -9,14 +9,14 @@ source activate /opt/ohpc/pub/apps/atari
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:1
 
-#SBATCH --job-name=p100_Grv
-#SBATCH -o re_out_p100_Grv.txt
-#SBATCH -e re_error_p100_Grv.txt
+#SBATCH --job-name=p100_Gr1
+#SBATCH -o re_out_p100_Gr1.txt
+#SBATCH -e re_error_p100_Gr1.txt
 
 srun -n2 python ./learn_play_runtime.py GravitarDeterministic-v4 ./output/punish_100_1/ 100.0 -2.0 False True --num_gpus=1 &
 
-#SBATCH --job-name=p100_Grv1
-#SBATCH -o re_out_p100_Grv1.txt
-#SBATCH -e re_error_p100_Grv1.txt
+#SBATCH --job-name=p100_Gr2
+#SBATCH -o re_out_p100_Gr2.txt
+#SBATCH -e re_error_p100_Gr2.txt
 
 srun -n2 python ./learn_play_runtime.py GravitarDeterministic-v4 ./output/punish_100_1/ 100.0 -2.0 False True --num_gpus=1
