@@ -1,17 +1,6 @@
 import os
 
-directory = 'my_tes/'
-os.mkdir(directory)
-
-game_name = ' GravitarDeterministic-v4'
-out_directory_game = ' ../../output/punish_100_1/'
-params = ' 100.0 -2.0 False True'
-f_name = 'name.sh'
-job_name = 'p100_Gr1'
-out_file = 're_out_p100_Gr1.txt'
-error_file = 're_error_p100_Gr1.txt'
-
-def create_batch_file(f_name, directory, job_name, out_file, error_file, game_name, out_directory_game, params):
+def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_name, out_directory_game, params):
     f = open(''.join([directory, f_name]), 'w')
     f.write('#!/bin/bash \n')
     f.write('#SBATCH --nodes=1 \n')
@@ -25,6 +14,37 @@ def create_batch_file(f_name, directory, job_name, out_file, error_file, game_na
     f.write(''.join(['#SBATCH -e ', error_file, ' \n']))
     f.write('module load anaconda/3.6 \n')
     f.write('source activate /opt/ohpc/pub/apps/atari \n')
-    f.write(''.join(['srun -n2 python ../../learn_play_runtime.py', game_name, out_directory_game, params, ' --num_gpus=1 \n']))
+    f.write(''.join(['srun -n2 python ../../learn_play_runtime.py ', game_name, out_directory_game, params, ' --num_gpus=1 \n']))
     f.close()
+
+
+
+directory = 'my_tes/'
+
+games = [
+    'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
+    'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
+    'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4',
+    'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
+    'RiverraidDeterministic-v4'
+         ]
+
+os.mkdir(directory)
+
+analysis_name = 'p100_1'
+out_directory_game = ' ../../output/punish_100_1/'
+params = ' 100.0 -2.0 False True'
+
+f = open(''.join(['Run_', analysis_name, '.sh']), 'w')
+
+for game_name in games:
+# game_name = ' GravitarDeterministic-v4'
+    f_name = ''.join([game_name, '.sh'])
+    f.write(''.join(['sbatch ', f_name , ' \n']))
+    job_name = ''.join([analysis_name, '_', game_name])
+    out_file = ''.join(['re_out_', job_name, '.txt'])
+    error_file = ''.join(['re_err_', job_name, '.txt'])
+    create_batch_srun(f_name, directory, job_name, out_file, error_file, game_name, out_directory_game, params)
+
+f.close()
 
