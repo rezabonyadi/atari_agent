@@ -1,0 +1,15 @@
+sbatch BreakoutDeterministic-v4.sh 
+sbatch AsterixDeterministic-v4.sh 
+sbatch CarnivalDeterministic-v4.sh 
+sbatch MsPacmanDeterministic-v4.sh 
+sbatch UpNDownDeterministic-v4.sh 
+sbatch AssaultDeterministic-v4.sh 
+sbatch BerzerkDeterministic-v4.sh 
+sbatch QbertDeterministic-v4.sh 
+sbatch AmidarDeterministic-v4.sh 
+sbatch SpaceInvadersDeterministic-v4.sh 
+sbatch FrostbiteDeterministic-v4.sh 
+sbatch KangarooDeterministic-v4.sh 
+sbatch GravitarDeterministic-v4.sh 
+sbatch TutankhamDeterministic-v4.sh 
+sbatch RiverraidDeterministic-v4.sh 
