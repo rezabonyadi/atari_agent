@@ -56,7 +56,7 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
     return episode_reward, total_frames
 
 
-def learn_by_game(results_handler, load_folder='', load_model=False):
+def learn_by_game(results_handler, settings_dict):
 
     # if load_folder is not '':
     #     player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
@@ -66,7 +66,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
     #         results_handler.load_settings_default(GAME_ENV)
 
     player, game_env, max_episode_length, max_number_of_episodes, all_settings = \
-        results_handler.load_default_settings_constants(GAME_ENV)
+        results_handler.load_settings_dictionary(GAME_ENV, settings_dict)
 
     for k, v in all_settings.items():
         print(k, ': ', v)
@@ -132,22 +132,6 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 
     results_handler.save_settings(all_settings, player)
 
-# GAME_ENV = 'BreakoutDeterministic-v4'
-# GAME_ENV = 'BerzerkDeterministic-v4'
-# GAME_ENV = 'QbertDeterministic-v4'
-# GAME_ENV = 'SpaceInvaders-v4' # 758 frames
-# GAME_ENV = 'Alien-v4' # 948 frames
-# GAME_ENV = 'Amidar-v4' # 812 frames
-# GAME_ENV = 'Venture-v4'
-# GAME_ENV = 'Assault-v4' # 876 frames
-# GAME_ENV = 'RoadRunner-v4' # 437 frames
-# GAME_ENV = 'PongDeterministic-v4'
-# GAME_ENV = 'AsterixDeterministic-v4'
-# GAME_ENV = 'MontezumaRevenge-v4'
-# GAME_ENV = 'ChopperCommand-v4'
-# OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
-# OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
-# OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
 # OUT_FOLDER = './output/punish_100/'
 
 # games = [
@@ -159,16 +143,60 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
 # 'RiverraidDeterministic-v4']
 
-# games = ['SpaceInvadersDeterministic-v4']
-#
-# for GAME_ENV in games:
-#     handler = HandleResults(GAME_ENV, OUT_FOLDER)
-#     learn_by_game(handler)
+settings_dict = dict()
+MAX_EPISODE_LENGTH= 18000
+NO_OP_STEPS= 10
+MAX_EPISODES= 4000
+AGENT_HISTORY_LENGTH= 4
+UPDATE_FREQ= 4
+NETW_UPDATE_FREQ= 10000
+REPLAY_MEMORY_START_SIZE = 50000
+DISCOUNT_FACTOR= 0.99
+MEMORY_SIZE = 1000000
+BS= 32
+LEARNING_RATE= 0.0001
+PUNISH= 100.0
+INI_EPSILON= 1.0
+END_EPSILON= 0.1
+MIN_OBSERVE_EPISODE= 200
+GAME_ENV= "BreakoutDeterministic-v4"
+REWARD_EXTRAPOLATION_EXPONENT = 2.0
+frame_height = 84
+frame_width = 84
+LINEAR_EXPLORATION_EXPONENT = False
+USE_DOUBLE_MODEL = True
 
 GAME_ENV = sys.argv[1]
 OUT_FOLDER = sys.argv[2]
+PUNISH = float(sys.argv[3])
+REWARD_EXTRAPOLATION_EXPONENT = float(sys.argv[4])
+LINEAR_EXPLORATION_EXPONENT = (sys.argv[5] == 'True')
+USE_DOUBLE_MODEL = (sys.argv[6] == 'True')
+
+settings_dict['GAME_ENV'] = GAME_ENV
+settings_dict['AGENT_HISTORY_LENGTH'] = AGENT_HISTORY_LENGTH
+settings_dict['MEMORY_SIZE'] = MEMORY_SIZE
+settings_dict['BS'] = BS
+settings_dict['LEARNING_RATE'] = LEARNING_RATE
+settings_dict['INI_EPSILON'] = INI_EPSILON
+settings_dict['END_EPSILON'] = END_EPSILON
+settings_dict['MIN_OBSERVE_EPISODE'] = MIN_OBSERVE_EPISODE
+settings_dict['NETW_UPDATE_FREQ'] = NETW_UPDATE_FREQ
+settings_dict['UPDATE_FREQ'] = UPDATE_FREQ
+settings_dict['DISCOUNT_FACTOR'] = DISCOUNT_FACTOR
+settings_dict['REPLAY_MEMORY_START_SIZE'] = REPLAY_MEMORY_START_SIZE
+settings_dict['frame_height'] = frame_height
+settings_dict['frame_width'] = frame_width
+settings_dict['NO_OP_STEPS'] = NO_OP_STEPS
+settings_dict['MAX_EPISODE_LENGTH'] = MAX_EPISODE_LENGTH
+settings_dict['MAX_EPISODES'] = MAX_EPISODES
+settings_dict['PUNISH'] = PUNISH
+settings_dict['REWARD_EXTRAPOLATION_EXPONENT'] = REWARD_EXTRAPOLATION_EXPONENT
+settings_dict['LINEAR_EXPLORATION_EXPONENT'] = LINEAR_EXPLORATION_EXPONENT
+settings_dict['USE_DOUBLE_MODEL'] = USE_DOUBLE_MODEL
+
 
 handler = HandleResults(GAME_ENV, OUT_FOLDER)
-learn_by_game(handler)
+learn_by_game(handler, settings_dict)
 
-# Run like: python ./learn_play_runtime.py BreakoutDeterministic-v4 ./output/punish_1_exp_2/
+# Run like: python ./learn_play_runtime.py BreakoutDeterministic-v4 ./output/punish_1_exp_2/ 1.0 2.0 False True
