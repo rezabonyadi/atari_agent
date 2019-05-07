@@ -17,22 +17,22 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
     f.write(''.join(['srun -n2 python ../learn_play_runtime.py ', game_name, out_directory_game, params, ' --num_gpus=1 \n']))
     f.close()
 
-directory = 'exp_10_bash/'
+directory = 'exp_50_bash/'
 
 games = [
     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
     'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4',
-    'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
+    'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4',
     'RiverraidDeterministic-v4'
          ]
 
 if not os.path.exists(directory):
     os.mkdir(directory)
 
-analysis_name = 'ex10'
-out_directory_game = ' ../output/exp_10/'
-params = ' 0.0 10.0 False True'
+analysis_name = 'ex50'
+out_directory_game = ' ../output/exp_50/'
+params = ' 0.0 50.0 False True'
 
 f = open(''.join(['Run_', analysis_name, '.sh']), 'w')
 
