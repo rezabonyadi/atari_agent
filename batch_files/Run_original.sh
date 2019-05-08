@@ -1,14 +1,1 @@
-sbatch original_bash//BreakoutDeterministic-v4.sh 
-sbatch original_bash//AsterixDeterministic-v4.sh 
-sbatch original_bash//CarnivalDeterministic-v4.sh 
-sbatch original_bash//MsPacmanDeterministic-v4.sh 
-sbatch original_bash//UpNDownDeterministic-v4.sh 
-sbatch original_bash//AssaultDeterministic-v4.sh 
-sbatch original_bash//BerzerkDeterministic-v4.sh 
-sbatch original_bash//QbertDeterministic-v4.sh 
-sbatch original_bash//AmidarDeterministic-v4.sh 
-sbatch original_bash//SpaceInvadersDeterministic-v4.sh 
-sbatch original_bash//FrostbiteDeterministic-v4.sh 
-sbatch original_bash//KangarooDeterministic-v4.sh 
-sbatch original_bash//GravitarDeterministic-v4.sh 
-sbatch original_bash//RiverraidDeterministic-v4.sh 
+sbatch original_bash//QbertDeterministic-v4.sh
