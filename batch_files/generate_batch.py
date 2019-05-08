@@ -18,8 +18,8 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
     f.close()
 
 
-analysis_name = 'ex100'
-params = ' 0.0 100.0 False True'
+analysis_name = 'p_1'
+params = ' 1.0 0.0 False False'
 
 directory = ''.join([analysis_name, '_bash/'])
 
@@ -34,7 +34,7 @@ games = [
 if not os.path.exists(directory):
     os.mkdir(directory)
 
-out_directory_game = ''.join([' ../output/', analysis_name, '/'])
+out_directory_game = ''.join([' ../output/DQN/', analysis_name, '/'])
 
 f = open(''.join(['Run_', analysis_name, '.sh']), 'w')
 
