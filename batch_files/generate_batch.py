@@ -18,8 +18,8 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
     f.close()
 
 
-analysis_name = 'e50'
-params = ' 0.0 50.0 False False'
+analysis_name = 'p10'
+params = ' 10.0 0.0 False False'
 
 directory = ''.join([analysis_name, '_bash/'])
 
