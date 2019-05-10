@@ -1,1 +1,0 @@
-sbatch original_bash//QbertDeterministic-v4.sh
