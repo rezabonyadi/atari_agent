@@ -18,7 +18,7 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
     f.close()
 
 
-analysis_name = 'Orig'
+analysis_name = 'DOrig'
 
 games = [
     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
@@ -27,9 +27,9 @@ games = [
     'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4',
     'RiverraidDeterministic-v4'
 ]
-out_directory_game = ''.join([' ../output/DDDQN/', analysis_name, '/'])
+out_directory_game = ''.join([' ../output/DQN/', analysis_name, '/'])
 
-params = ' 0.0 -1.0 False True'
+params = ' 0.0 -1.0 False False'
 
 directory = ''.join([analysis_name, '_bash/'])
 
