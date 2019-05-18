@@ -18,20 +18,24 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
     f.close()
 
 
-analysis_name = 'Orig'
+analysis_name = 'e50_p1'
+
+# games = [
+#     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
+#     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
+#     'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4',
+#     'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4',
+#     'RiverraidDeterministic-v4'
+# ]
 
 games = [
-    'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
-    'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
-    'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4',
-    'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4',
-    'RiverraidDeterministic-v4'
-]
+'HeroDeterministic-v4', 'JamesbondDeterministic-v4', 'SeaquestDeterministic-v4', 'BankHeistDeterministic-v4',
+'AirRaidDeterministic-v4', 'CentipedeDeterministic-v4']
 
 
 out_directory_game = ''.join([' ../output/DDDQN/', analysis_name, '/'])
 
-params = ' 0.0 -50.0 False True'
+params = ' 1.0 50.0 False True'
 
 directory = ''.join([analysis_name, '_bash/'])
 
