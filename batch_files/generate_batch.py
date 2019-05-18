@@ -20,6 +20,7 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
 
 analysis_name = 'e50_p1'
 
+
 # games = [
 #     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
 #     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
