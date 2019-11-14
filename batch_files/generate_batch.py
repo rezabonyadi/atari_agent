@@ -18,9 +18,6 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
     f.close()
 
 
-analysis_name = 'e50_p1'
-
-
 # games = [
 #     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
 #     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
@@ -33,12 +30,18 @@ analysis_name = 'e50_p1'
 # 'HeroDeterministic-v4', 'JamesbondDeterministic-v4', 'SeaquestDeterministic-v4', 'BankHeistDeterministic-v4',
 # 'AirRaidDeterministic-v4', 'CentipedeDeterministic-v4']
 
-games = ['MontezumaRevenge-v4']
+# games = ['MontezumaRevenge-v4']
+games = ['SolarisDeterministic-v4']
 
+# analysis_name = 'e50_p1'
+# params = ' 1.0 50.0 False True'
+
+analysis_name = 'Org'
+params = ' 0.0 -50.0 False True'
+# punish exponent Linear_exploration Double
 
 out_directory_game = ''.join([' ../output/DDQN/', analysis_name, '/'])
 
-params = ' 1.0 50.0 False True'
 
 directory = ''.join([analysis_name, '_bash/'])
 
