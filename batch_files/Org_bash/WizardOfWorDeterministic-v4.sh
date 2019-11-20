@@ -10,4 +10,4 @@
 #SBATCH -e re_err_Org_WizardOfWorDeterministic-v4.txt 
 module load anaconda/3.6 
 source activate /opt/ohpc/pub/apps/atari 
-srun -n2 python ../learn_play_runtime.py WizardOfWorDeterministic-v4 ../output/DDQN/Org/ 0.0 -50.0 False True --num_gpus=1 
+srun -n2 python ../learn_play_runtime.py WizardOfWorDeterministic-v4 ../output/DDDQN/Org/ 0.0 -50.0 False True --num_gpus=1 
