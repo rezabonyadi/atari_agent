@@ -33,12 +33,14 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
         action = player.take_action(current_state, total_frames, evaluation)
         processed_new_frame, reward, terminal, terminal_life_lost, original_frame = game_env.step(action)
 
-        if not evaluation:
-            if frame_number >= max_episode_length:
-                terminal = True
-                terminal_life_lost = True
+        if frame_number >= max_episode_length:
+            terminal = True
+            terminal_life_lost = True
 
+        if not evaluation:
             player.updates(total_frames, episode, action, processed_new_frame, reward, terminal_life_lost, life_seq)
+        else:
+            gif_frames.append(original_frame)
 
         episode_reward += reward
         life_seq += 1
@@ -53,7 +55,7 @@ def run_episode(max_episode_length, episode, game_env, player, total_frames, eva
         if terminal:
             break
 
-    return episode_reward, total_frames
+    return episode_reward, total_frames, gif_frames
 
 
 def learn_by_game(results_handler, load_folder='', load_model=False):
@@ -85,7 +87,7 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
     best_evaluation = -100000
 
     for episode in range(max_number_of_episodes):
-        episode_reward, total_frames = run_episode(max_episode_length, episode, game_env, player, total_frames)
+        episode_reward, total_frames, _ = run_episode(max_episode_length, episode, game_env, player, total_frames)
 
         # all_rewards[episode] = episode_reward
         all_rewards.append(episode_reward)
@@ -130,6 +132,12 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
             prev_time = now
             prev_frames = total_frames
 
+        if episode % 100 == 0:
+            episode_reward, _, gif_frames = \
+                run_episode(max_episode_length, episode, game_env, player, total_frames, evaluation=True)
+
+            results_handler.generate_gif(episode, gif_frames, episode_reward, 'e5_p1')
+
     results_handler.save_settings(all_settings, player)
 
 # GAME_ENV = 'BreakoutDeterministic-v4'
@@ -148,7 +156,8 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/punish_100/'
+# OUT_FOLDER = './output/punish_100/'
+OUT_FOLDER = './output/presentation/DDQN/us/'
 
 # games = [
 #     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
@@ -157,8 +166,10 @@ OUT_FOLDER = './output/punish_100/'
 #          ]
 
 
-games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
-'RiverraidDeterministic-v4']
+# games = ['FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4', 'TutankhamDeterministic-v4',
+# 'RiverraidDeterministic-v4']
+
+games = ['BreakoutDeterministic-v4']
 
 # games = ['SpaceInvadersDeterministic-v4']
 

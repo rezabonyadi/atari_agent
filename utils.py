@@ -5,6 +5,8 @@ import datetime
 import os
 import json
 import csv
+import imageio
+from skimage.transform import resize
 
 MAX_EPISODE_LENGTH= 18000
 NO_OP_STEPS= 10
@@ -17,12 +19,12 @@ DISCOUNT_FACTOR= 0.99
 MEMORY_SIZE = 1000000
 BS= 32
 LEARNING_RATE= 0.0001
-PUNISH= 100.0
+PUNISH= 1.0
 INI_EPSILON= 1.0
 END_EPSILON= 0.1
 MIN_OBSERVE_EPISODE= 200
 GAME_ENV= "BreakoutDeterministic-v4"
-REWARD_EXTRAPOLATION_EXPONENT = -2.0
+REWARD_EXTRAPOLATION_EXPONENT = 5.0
 frame_height = 84
 frame_width = 84
 LINEAR_EXPLORATION_EXPONENT = False
@@ -129,6 +131,16 @@ class HandleResults:
         file.close()
 
         print(res_dict)
+
+    def generate_gif(self, episode, frames_for_gif, reward, string_to_add):
+
+        path = self.folder_to_use
+        for idx, frame_idx in enumerate(frames_for_gif):
+            frames_for_gif[idx] = resize(frame_idx, (420, 320, 3),
+                                         preserve_range=True, order=0).astype(np.uint8)
+
+        imageio.mimsave(f'{path}{"ATARI_episode_{0}_reward_{1}_{2}.gif".format(episode, reward, string_to_add)}',
+                        frames_for_gif, duration=1 / 30)
 
     def build_player(self, settings_dict, game_env):
         player = Player(game_env, settings_dict['AGENT_HISTORY_LENGTH'], settings_dict['MEMORY_SIZE'],
