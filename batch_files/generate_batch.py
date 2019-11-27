@@ -36,13 +36,13 @@ games = ['SolarisDeterministic-v4', 'PrivateEyeDeterministic-v4', 'WizardOfWorDe
          'VentureDeterministic-v4']
 
 # analysis_name = 'e50_p1'
-# params = ' 1.0 50.0 False True'
+# params = ' 1.0 50.0 False False'
 
-analysis_name = 'Org'
-params = ' 0.0 -50.0 False True'
+analysis_name = 'original'
+params = ' 0.0 -50.0 False False'
 # punish exponent Linear_exploration Double
 
-out_directory_game = ''.join([' ../output/DDDQN/', analysis_name, '/'])
+out_directory_game = ''.join([' ../output/DQN/', analysis_name, '/'])
 
 
 directory = ''.join([analysis_name, '_bash/'])
