@@ -1,1 +1,1 @@
-sbatch e50_p1_bash//AlienDeterministic-v4.sh 
+sbatch e50_p1_bash//PrivateEyeDeterministic-v4.sh 
