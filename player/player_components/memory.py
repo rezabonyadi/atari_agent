@@ -89,6 +89,10 @@ class ReplayMemory:
 
             seen_before = self.spotlight.seen_before(f)
             self.spotlight.spotlight_train(f)
+            dist = np.linalg.norm(self.spotlight.spotlight_model.predict(f)-np.ones(self.spotlight.embedding_dimension))
+            if frame_in_seq<5:
+                print(frame_in_seq, episode, dist)
+
         else:
             seen_before = False
 

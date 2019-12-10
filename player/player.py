@@ -35,7 +35,8 @@ class Player:
                                    agent_history_length, total_memory_size,
                                    batch_size, self.game_env.is_graphical,use_estimated_reward=use_estimated_reward,
                                    reward_extrapolation_exponent=reward_extrapolation_exponent,
-                                   linear_exploration_exponent=self.linear_exploration_exponent)
+                                   linear_exploration_exponent=self.linear_exploration_exponent,
+                                   use_spotlight=True)
 
         self.learner = QLearner(self.n_actions, learning_rate, self.game_env.frame_height, self.game_env.frame_width,
                                 agent_history_length, gamma=gamma, use_double_model=self.use_double_model)
@@ -59,6 +60,7 @@ class Player:
 
     # @jit
     def learn(self, no_passed_frames):
+        # This is a constant approach, learn after a given frequency, but maybe it can be improved?
         if no_passed_frames % self.train_frequency == 0:
             current_state_batch, actions, rewards, next_state_batch, terminal_flags = self.memory.get_minibatch()
 
