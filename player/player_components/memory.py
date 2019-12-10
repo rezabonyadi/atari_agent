@@ -52,8 +52,8 @@ class ReplayMemory:
         self.sparsity_lengths = []
         self.terminal_lengths = []
         self.rewards_values = []
-        self.min_reward = 0.0
-        self.max_reward = 0.0
+        self.min_reward = 1000000.0
+        self.max_reward = -1000000.0
         self.prev_reward = 0
         self.prev_terminal = 0
 

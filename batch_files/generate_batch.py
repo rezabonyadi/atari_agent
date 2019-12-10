@@ -34,7 +34,7 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
 # games = ['SolarisDeterministic-v4', 'PrivateEyeDeterministic-v4', 'WizardOfWorDeterministic-v4',
 #          'ZaxxonDeterministic-v4', 'FreewayDeterministic-v4', 'VentureDeterministic-v4']
 
-games=['AlienDeterministic-v4']
+games=['RoadRunnerDeterministic-v4', 'TutankhamDeterministic-v4', 'KungFuMasterDeterministic-v4', 'KrullDeterministic-v4']
 
 # analysis_name = 'e50_p1'
 # params = ' 1.0 50.0 False True'
