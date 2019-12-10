@@ -104,22 +104,6 @@ class QLearner:
             else:
                 self.targets[i] = rewards[i] + self.gamma * q_target[i, action[i]]
 
-    # @jit
-    def action_selection_policy(self, q_values):
-        # v = q_values - q_values.min(axis=1).reshape((-1, 1))
-        # v += 1.0
-        # sums = v.sum(axis=1).reshape((-1, 1))
-        # v = v / sums
-        # v = np.cumsum(v, axis=1)
-        #
-        # res = np.empty(q_values.shape[0], dtype=np.int32)
-        # r = np.random.rand(q_values.shape[0])
-        # for i in range(q_values.shape[0]):
-        #     res[i] = np.argwhere(v[i,:] >= r[i])[0,0]
-
-        res = np.argmax(q_values, axis=1)
-        return res, q_values[0,res][0]
-
 class DQN:
 
     def __init__(self, n_actions, learning_rate=0.00001,
