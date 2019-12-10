@@ -104,7 +104,7 @@ class ReplayMemory:
             self.frame_number_in_epison[self.current] = frame_in_seq
 
             if terminal:
-                terminal_length = self.current - self.prev_terminal # Length of consecutive zero rewards
+                terminal_length = self.current - self.prev_terminal # Length of the episode
                 self.terminal_lengths.append(terminal_length)
                 self.prev_terminal = self.current
 
