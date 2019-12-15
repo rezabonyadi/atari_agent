@@ -73,11 +73,11 @@ class Player:
             self.learner.update_target_network()
 
     def calculate_punishment(self):
-        punishment = 0.0
-        if abs(self.punishment) > 0:
-            punishment = min(self.memory.min_reward - 1, -1)
-
-        # punishment = -self.punishment
+        # punishment = 0.0
+        # if abs(self.punishment) > 0:
+        #     punishment = min(self.memory.min_reward - 1, -1)
+        #
+        punishment = -self.punishment
         return punishment
 
     # @jit
