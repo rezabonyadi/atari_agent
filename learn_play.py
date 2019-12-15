@@ -140,7 +140,8 @@ OUT_FOLDER = './output/test_out/'
 games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4']
 
-games = ['PrivateEyeDeterministic-v4']
+games = ['BreakoutDeterministic-v4']
+
 
 for GAME_ENV in games:
     handler = HandleResults(GAME_ENV, OUT_FOLDER)

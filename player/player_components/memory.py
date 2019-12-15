@@ -184,7 +184,8 @@ class ReplayMemory:
                     continue
                 # if self.terminal_flags[index - self.agent_history_length:index].any():
                 #     continue
-                if self.frame_number_in_epison[index] - self.frame_number_in_epison[index - self.agent_history_length] != self.agent_history_length:
+                if self.frame_number_in_epison[index] - self.frame_number_in_epison[index - self.agent_history_length] \
+                        != self.agent_history_length:
                     continue
                 break
             self.minibatch_indices[i] = index
