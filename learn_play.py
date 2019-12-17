@@ -135,12 +135,14 @@ def learn_by_game(results_handler, load_folder='', load_model=False):
 # OUT_FOLDER = './output/Punish_0_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_No_Reward_exploration/'
 # OUT_FOLDER = './output/Punish_1_Reward_exploration_linear/'
-OUT_FOLDER = './output/test_out/'
+OUT_FOLDER = './output/td_qn/lambda_95/'
 
 games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4']
 
-games = ['BreakoutDeterministic-v4']
+games = [#'BreakoutDeterministic-v4',
+         'SpaceInvaders-v4', 'QbertDeterministic-v4', 'BeamRiderDeterministic-v4',
+         'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4']
 
 
 for GAME_ENV in games:
