@@ -146,7 +146,7 @@ def learn_by_game(results_handler, settings_dict):
 settings_dict = dict()
 MAX_EPISODE_LENGTH= 18000
 NO_OP_STEPS= 10
-MAX_EPISODES= 4000
+MAX_EPISODES= 2000
 AGENT_HISTORY_LENGTH= 4
 UPDATE_FREQ= 4
 NETW_UPDATE_FREQ= 10000
