@@ -140,10 +140,10 @@ OUT_FOLDER = './output/td_qn/lambda_95/'
 games = ['BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4']
 
-games = [#'BreakoutDeterministic-v4',
+games = ['BreakoutDeterministic-v4',
          'SpaceInvaders-v4', 'QbertDeterministic-v4', 'BeamRiderDeterministic-v4',
          'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4']
-
+games = ['MsPacmanDeterministic-v4']
 
 for GAME_ENV in games:
     handler = HandleResults(GAME_ENV, OUT_FOLDER)
