@@ -40,8 +40,8 @@ games = ['BreakoutDeterministic-v4', 'SpaceInvadersDeterministic-v4', 'QbertDete
          'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4']
 
 # games = ['PrivateEyeDeterministic-v4']
-analysis_name = 'lmb_95'
-params = ' 0.0 0.95 False True'
+analysis_name = 'lmb_15'
+params = ' 0.0 0.15 False True'
 
 # analysis_name = 'original'
 # params = ' 0.0 -50.0 False True'
