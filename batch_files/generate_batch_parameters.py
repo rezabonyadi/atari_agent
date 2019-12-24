@@ -19,23 +19,21 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
 
 
 # games = [
-#     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4',
+#     'BreakoutDeterministic-v4', 'AsterixDeterministic-v4', 'CarnivalDeterministic-v4',
 #     'UpNDownDeterministic-v4', 'AssaultDeterministic-v4', 'BerzerkDeterministic-v4',
 #     'QbertDeterministic-v4', 'AmidarDeterministic-v4', 'SpaceInvadersDeterministic-v4',
 #     'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4',
-#     'RiverraidDeterministic-v4'
+#     'RiverraidDeterministic-v4', 'HeroDeterministic-v4', 'JamesbondDeterministic-v4',
+#     'SeaquestDeterministic-v4', 'BankHeistDeterministic-v4', 'AirRaidDeterministic-v4',
+#     'SolarisDeterministic-v4', 'PrivateEyeDeterministic-v4', 'WizardOfWorDeterministic-v4',
+#     'ZaxxonDeterministic-v4', 'FreewayDeterministic-v4', 'VentureDeterministic-v4',
+#     'RoadRunnerDeterministic-v4', 'TutankhamDeterministic-v4', 'KungFuMasterDeterministic-v4',
+#     'KrullDeterministic-v4', 'CentipedeDeterministic-v4', 'MsPacmanDeterministic-v4',
+#     'AlienDeterministic-v4'
 # ]
 
-# games = [
-# 'HeroDeterministic-v4', 'JamesbondDeterministic-v4', 'SeaquestDeterministic-v4', 'BankHeistDeterministic-v4',
-# 'AirRaidDeterministic-v4', 'CentipedeDeterministic-v4']
 
 # games = ['MontezumaRevenge-v4']
-# games = ['SolarisDeterministic-v4', 'PrivateEyeDeterministic-v4', 'WizardOfWorDeterministic-v4',
-#          'ZaxxonDeterministic-v4', 'FreewayDeterministic-v4', 'VentureDeterministic-v4']
-
-# games=['RoadRunnerDeterministic-v4', 'TutankhamDeterministic-v4', 'KungFuMasterDeterministic-v4',
-#        'KrullDeterministic-v4']
 games = ['BreakoutDeterministic-v4', 'SpaceInvadersDeterministic-v4', 'QbertDeterministic-v4', 'BeamRiderDeterministic-v4',
          'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4']
 
