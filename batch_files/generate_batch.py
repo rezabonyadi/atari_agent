@@ -42,7 +42,7 @@ params = ' 1.0 0.65 False True'
 # params = ' 0.0 -50.0 False True'
 # punish exponent Linear_exploration Double
 
-out_directory_game = ''.join([' ../output/DDQN/lambda/', analysis_name, '/'])
+out_directory_game = ''.join([' ../output/DDQN/', analysis_name, '/'])
 
 
 directory = ''.join([analysis_name, '_bash/'])

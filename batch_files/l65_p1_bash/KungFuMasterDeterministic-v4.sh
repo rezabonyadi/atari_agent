@@ -10,4 +10,4 @@
 #SBATCH -e re_err_l65_p1_KungFuMasterDeterministic-v4.txt 
 module load anaconda/3.6 
 source activate /opt/ohpc/pub/apps/atari 
-srun -n2 python ../learn_play_runtime.py KungFuMasterDeterministic-v4 ../output/DDQN/lambda/l65_p1/ 1.0 0.65 False True --num_gpus=1 
+srun -n2 python ../learn_play_runtime.py KungFuMasterDeterministic-v4 ../output/DDQN/l65_p1/ 1.0 0.65 False True --num_gpus=1 
