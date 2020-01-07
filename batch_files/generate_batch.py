@@ -24,25 +24,25 @@ games = [
     'FrostbiteDeterministic-v4', 'KangarooDeterministic-v4', 'GravitarDeterministic-v4',
     'RiverraidDeterministic-v4', 'HeroDeterministic-v4', 'JamesbondDeterministic-v4',
     'SeaquestDeterministic-v4', 'BankHeistDeterministic-v4', 'AirRaidDeterministic-v4',
-    'SolarisDeterministic-v4', 'PrivateEyeDeterministic-v4', 'WizardOfWorDeterministic-v4',
+    'SolarisDeterministic-v4', 'WizardOfWorDeterministic-v4',
     'ZaxxonDeterministic-v4', 'FreewayDeterministic-v4', 'VentureDeterministic-v4',
     'RoadRunnerDeterministic-v4', 'TutankhamDeterministic-v4', 'KungFuMasterDeterministic-v4',
     'KrullDeterministic-v4', 'CentipedeDeterministic-v4', 'MsPacmanDeterministic-v4',
     'AlienDeterministic-v4'
 ]
 
-# games=['RoadRunnerDeterministic-v4', 'TutankhamDeterministic-v4', 'KungFuMasterDeterministic-v4',
+# games=['RoadRunnerDeterministic-v4', 'PrivateEyeDeterministic-v4', 'TutankhamDeterministic-v4', 'KungFuMasterDeterministic-v4',
 #        'KrullDeterministic-v4']
 
 # games = ['BeamRiderDeterministic-v4']
 analysis_name = 'l65_p1'
-params = ' 1.0 0.65 False True'
+params = ' 1.0 0.65 False False'
 
 # analysis_name = 'original'
 # params = ' 0.0 -50.0 False True'
 # punish exponent Linear_exploration Double
 
-out_directory_game = ''.join([' ../output/DDQN/', analysis_name, '/'])
+out_directory_game = ''.join([' ../output/DQN/', analysis_name, '/'])
 
 
 directory = ''.join([analysis_name, '_bash/'])
