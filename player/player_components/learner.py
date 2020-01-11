@@ -131,9 +131,9 @@ class DQN:
 
         input_shape = (frame_height, frame_width, agent_history_length)
         # model = self.legacy_model(input_shape, self.n_actions)
-        # model = self.dueling_convnet(input_shape, self.n_actions)
+        model = self.dueling_convnet(input_shape, self.n_actions)
         # model = self.my_convnet(input_shape, self.n_actions)
-        model = self.nature_convnet(input_shape, self.n_actions)
+        # model = self.nature_convnet(input_shape, self.n_actions)
         # model = self.small_nature_convnet(input_shape, self.n_actions)
         # model = self.sim_nature_convnet(input_shape, self.n_actions)
         # model = self.modular_convnet(input_shape, self.n_actions)
