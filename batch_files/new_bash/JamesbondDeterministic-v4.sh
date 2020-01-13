@@ -10,4 +10,4 @@
 #SBATCH -e re_err_new_JamesbondDeterministic-v4.txt 
 module load anaconda/3.6 
 source activate /opt/ohpc/pub/apps/atari 
-srun -n2 python ../learn_play_runtime.py JamesbondDeterministic-v4 ../output/DDDQN/new/ 1.0 0.65 True True --num_gpus=1 
+srun -n2 python ../learn_play_runtime.py JamesbondDeterministic-v4 ../output/DDDQN/new/ 1.0 0.65 False True --num_gpus=1 

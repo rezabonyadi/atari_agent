@@ -32,7 +32,7 @@ games = [
 ]
 
 analysis_name = 'new'
-params = ' 1.0 0.65 True True'
+params = ' 1.0 0.65 False True'
 
 # analysis_name = 'original'
 # params = ' 0.0 -50.0 False True'
