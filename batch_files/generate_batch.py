@@ -30,12 +30,12 @@ games = [
     'KrullDeterministic-v4', 'CentipedeDeterministic-v4', 'MsPacmanDeterministic-v4',
     'AlienDeterministic-v4'
 ]
+games = ['RoadRunnerDeterministic-v4']
+# analysis_name = 'new'
+# params = ' 1.0 0.65 False True'
 
-analysis_name = 'new'
-params = ' 1.0 0.65 False True'
-
-# analysis_name = 'original'
-# params = ' 0.0 -50.0 False True'
+analysis_name = 'original'
+params = ' 0.0 -50.0 False True'
 # punish exponent Linear_exploration Double
 
 out_directory_game = ''.join([' ../output/DDDQN/', analysis_name, '/'])
