@@ -34,13 +34,13 @@ def create_batch_srun(f_name, directory, job_name, out_file, error_file, game_na
 
 
 # games = ['MontezumaRevenge-v4']
-# games = ['BreakoutDeterministic-v4', 'SpaceInvadersDeterministic-v4', 'QbertDeterministic-v4', 'BeamRiderDeterministic-v4',
-#          'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4']
-games = ['UpNDownDeterministic-v4', 'GravitarDeterministic-v4', 'BerzerkDeterministic-v4']
+games = ['BreakoutDeterministic-v4', 'SpaceInvadersDeterministic-v4', 'QbertDeterministic-v4',
+         'CarnivalDeterministic-v4', 'MsPacmanDeterministic-v4', 'UpNDownDeterministic-v4',
+         'GravitarDeterministic-v4', 'BerzerkDeterministic-v4']
 
 # games = ['PrivateEyeDeterministic-v4']
-analysis_name = 'lmb_95'
-params = ' 0.0 0.95 False True'
+analysis_name = 'lmb_45'
+params = ' 0.0 0.45 False True'
 
 # analysis_name = 'original'
 # params = ' 0.0 -50.0 False True'
