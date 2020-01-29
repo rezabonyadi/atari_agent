@@ -30,15 +30,15 @@ games = [
     'KrullDeterministic-v4', 'CentipedeDeterministic-v4', 'MsPacmanDeterministic-v4',
     'AlienDeterministic-v4'
 ]
-games = ['RoadRunnerDeterministic-v4']
-# analysis_name = 'new'
+games = ['MontezumaRevenge-v4']
+# analysis_name = 'l65_p1'
 # params = ' 1.0 0.65 False True'
 
 analysis_name = 'original'
 params = ' 0.0 -50.0 False True'
 # punish exponent Linear_exploration Double
 
-out_directory_game = ''.join([' ../output/DDDQN/', analysis_name, '/'])
+out_directory_game = ''.join([' ../output/DDQN/', analysis_name, '/'])
 
 directory = ''.join([analysis_name, '_bash/'])
 
